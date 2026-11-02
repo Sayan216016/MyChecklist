@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyChecklist — Home (mockup)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="mock-banner">
+    UI mockup —
+    <a href="index.html">Sign in</a> ·
+    <a href="checklist.html">Checklist</a>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="app-header__brand" href="home.html">
+        <span class="app-header__logo" aria-hidden="true">✓</span>
+        MyChecklist
+      </a>
+      <div class="app-header__actions">
+        <div class="user-chip">
+          <span class="avatar avatar--initials avatar--sm" aria-hidden="true">RK</span>
+          <span>Rahul K.</span>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="index.html">Sign out</a>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="home-toolbar">
+        <div>
+          <h1 class="page-title">Your checklists</h1>
+          <p class="page-subtitle">Lists you created and lists shared with you.</p>
+        </div>
+        <button type="button" class="btn btn--primary">+ New checklist</button>
+      </div>
+
+      <section class="section" aria-labelledby="created-heading">
+        <h2 id="created-heading" class="section__title">Created by me</h2>
+        <div class="list-cards">
+          <a class="list-card" href="checklist.html">
+            <div class="list-card__icon" aria-hidden="true">📋</div>
+            <div class="list-card__body">
+              <p class="list-card__title">Goa trip — March 2026</p>
+              <p class="list-card__meta">4 collaborators · 12 items · Updated today</p>
+            </div>
+            <div class="list-card__avatars" aria-hidden="true">
+              <span class="avatar avatar--initials avatar--sm avatar--color-2">AK</span>
+              <span class="avatar avatar--initials avatar--sm avatar--color-3">PS</span>
+              <span class="avatar avatar--initials avatar--sm avatar--color-4">NM</span>
+            </div>
+            <span class="list-card__chevron" aria-hidden="true">›</span>
+          </a>
+
+          <a class="list-card" href="checklist.html">
+            <div class="list-card__icon" aria-hidden="true">📋</div>
+            <div class="list-card__body">
+              <p class="list-card__title">Apartment move</p>
+              <p class="list-card__meta">2 collaborators · 8 items · Updated 3 days ago</p>
+            </div>
+            <div class="list-card__avatars" aria-hidden="true">
+              <span class="avatar avatar--initials avatar--sm avatar--color-3">PS</span>
+            </div>
+            <span class="list-card__chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="shared-heading">
+        <h2 id="shared-heading" class="section__title">Shared with me</h2>
+        <div class="list-cards">
+          <a class="list-card" href="checklist.html">
+            <div class="list-card__icon" aria-hidden="true">📋</div>
+            <div class="list-card__body">
+              <p class="list-card__title">Team offsite prep</p>
+              <p class="list-card__meta">Owner: Priya S. · 6 collaborators · 19 items</p>
+            </div>
+            <div class="list-card__avatars" aria-hidden="true">
+              <span class="avatar avatar--initials avatar--sm avatar--color-3">PS</span>
+              <span class="avatar avatar--initials avatar--sm avatar--color-2">AK</span>
+              <span class="avatar avatar--initials avatar--sm avatar--color-4">NM</span>
+            </div>
+            <span class="list-card__chevron" aria-hidden="true">›</span>
+          </a>
+
+          <a class="list-card" href="checklist.html">
+            <div class="list-card__icon" aria-hidden="true">📋</div>
+            <div class="list-card__body">
+              <p class="list-card__title">Wedding errands</p>
+              <p class="list-card__meta">Owner: Neha M. · 5 collaborators · 24 items</p>
+            </div>
+            <div class="list-card__avatars" aria-hidden="true">
+              <span class="avatar avatar--initials avatar--sm avatar--color-4">NM</span>
+            </div>
+            <span class="list-card__chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Goa trip — MyChecklist (mockup)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="mock-banner">
+    UI mockup —
+    <a href="index.html">Sign in</a> ·
+    <a href="home.html">Home</a>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="app-header__brand" href="home.html">
+        <span class="app-header__logo" aria-hidden="true">✓</span>
+        MyChecklist
+      </a>
+      <div class="app-header__actions">
+        <div class="user-chip">
+          <span class="avatar avatar--initials avatar--sm" aria-hidden="true">RK</span>
+          <span>Rahul K.</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main app-main--wide">
+      <div class="checklist-toolbar">
+        <div>
+          <h1>Goa trip — March 2026</h1>
+          <p class="checklist-toolbar__meta">You’re the owner · 4 collaborators · Live updates when connected</p>
+        </div>
+        <div class="checklist-toolbar__actions">
+          <a class="btn btn--secondary btn--sm" href="#invite-modal">Invite</a>
+          <button type="button" class="btn btn--danger btn--sm">Delete list</button>
+        </div>
+      </div>
+
+      <div class="members-bar">
+        <span class="members-bar__label">Collaborators</span>
+        <span class="member-pill member-pill--you">
+          <span class="avatar avatar--initials avatar--sm" aria-hidden="true">RK</span>
+          You
+        </span>
+        <span class="member-pill">
+          <span class="avatar avatar--initials avatar--sm avatar--color-2" aria-hidden="true">AK</span>
+          Amit K.
+        </span>
+        <span class="member-pill">
+          <span class="avatar avatar--initials avatar--sm avatar--color-3" aria-hidden="true">PS</span>
+          Priya S.
+        </span>
+        <span class="member-pill">
+          <span class="avatar avatar--initials avatar--sm avatar--color-4" aria-hidden="true">NM</span>
+          Neha M.
+        </span>
+      </div>
+
+      <!-- Mobile: one column at a time (static mock shows "You" column) -->
+      <div class="mobile-tabs mobile-only" role="tablist" aria-label="Collaborator columns">
+        <button type="button" class="mobile-tabs__tab mobile-tabs__tab--active" role="tab" aria-selected="true">You</button>
+        <button type="button" class="mobile-tabs__tab" role="tab">Amit</button>
+        <button type="button" class="mobile-tabs__tab" role="tab">Priya</button>
+        <button type="button" class="mobile-tabs__tab" role="tab">Neha</button>
+      </div>
+
+      <div class="mobile-list mobile-only">
+        <p class="page-subtitle" style="margin-top: 0;">Showing <strong>your column</strong> — each row is one item someone added.</p>
+        <article class="mobile-row-card">
+          <div class="mobile-row-card__index">Row 1 · Your item</div>
+          <div class="check-item">
+            <div class="check-item__row">
+              <input class="check-item__input" type="checkbox" id="m1" />
+              <label class="check-item__label" for="m1">Book flights (DEL → GOI)</label>
+            </div>
+          </div>
+        </article>
+        <article class="mobile-row-card">
+          <div class="mobile-row-card__index">Row 2 · Priya’s item (you can check it)</div>
+          <div class="check-item check-item--done">
+            <div class="check-item__row">
+              <input class="check-item__input" type="checkbox" id="m2" checked />
+              <label class="check-item__label" for="m2">Airbnb deposit</label>
+            </div>
+            <p class="check-item__meta">Done by you · Today 2:14 PM</p>
+          </div>
+        </article>
+        <article class="mobile-row-card">
+          <div class="mobile-row-card__index">Row 3 · Your item</div>
+          <div class="check-item">
+            <div class="check-item__row">
+              <input class="check-item__input" type="checkbox" id="m3" />
+              <label class="check-item__label" for="m3">Travel insurance</label>
+            </div>
+          </div>
+        </article>
+        <div class="add-item-inline" style="margin-top: 0.75rem;">
+          <input type="text" placeholder="Add item in your column…" aria-label="New item" />
+          <button type="button" class="btn btn--primary btn--sm">Add</button>
+        </div>
+      </div>
+
+      <!-- Desktop: full column grid -->
+      <div class="grid-scroll grid-scroll--desktop">
+        <table class="checklist-grid" role="grid" aria-label="Collaborative checklist">
+          <thead>
+            <tr>
+              <th class="col-index" scope="col">#</th>
+              <th class="col-member" scope="col">
+                <div class="col-header">
+                  <div class="col-header__inner">
+                    <span class="avatar avatar--initials avatar--lg" aria-hidden="true">RK</span>
+                    <span class="col-header__name">You</span>
+                    <span class="col-header__badge">Owner</span>
+                    <div class="col-header__add add-item-inline">
+                      <input type="text" placeholder="Add item…" aria-label="Add item in your column" />
+                      <button type="button" class="btn btn--primary btn--sm">Add</button>
+                    </div>
+                  </div>
+                </div>
+              </th>
+              <th class="col-member" scope="col">
+                <div class="col-header">
+                  <div class="col-header__inner">
+                    <span class="avatar avatar--initials avatar--lg avatar--color-2" aria-hidden="true">AK</span>
+                    <span class="col-header__name">Amit K.</span>
+                  </div>
+                </div>
+              </th>
+              <th class="col-member" scope="col">
+                <div class="col-header">
+                  <div class="col-header__inner">
+                    <span class="avatar avatar--initials avatar--lg avatar--color-3" aria-hidden="true">PS</span>
+                    <span class="col-header__name">Priya S.</span>
+                  </div>
+                </div>
+              </th>
+              <th class="col-member" scope="col">
+                <div class="col-header">
+                  <div class="col-header__inner">
+                    <span class="avatar avatar--initials avatar--lg avatar--color-4" aria-hidden="true">NM</span>
+                    <span class="col-header__name">Neha M.</span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-index">1</td>
+              <td class="grid-cell">
+                <div class="check-item">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r1-you" />
+                    <label class="check-item__label" for="r1-you">Book flights (DEL → GOI)</label>
+                  </div>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+            </tr>
+            <tr>
+              <td class="col-index">2</td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell">
+                <div class="check-item">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r2-amit" />
+                    <label class="check-item__label" for="r2-amit">Car rental pickup</label>
+                  </div>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+            </tr>
+            <tr>
+              <td class="col-index">3</td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell">
+                <div class="check-item check-item--done">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r3-priya" checked />
+                    <label class="check-item__label" for="r3-priya">Airbnb deposit</label>
+                  </div>
+                  <p class="check-item__meta">Done by Rahul (you) · Today 2:14 PM</p>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+            </tr>
+            <tr>
+              <td class="col-index">4</td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell">
+                <div class="check-item">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r4-neha" />
+                    <label class="check-item__label" for="r4-neha">Beach gear &amp; sunscreen</label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-index">5</td>
+              <td class="grid-cell">
+                <div class="check-item">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r5-you" />
+                    <label class="check-item__label" for="r5-you">Travel insurance</label>
+                  </div>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell">
+                <div class="check-item check-item--done">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r5-priya" checked />
+                    <label class="check-item__label" for="r5-priya">Restaurant shortlist</label>
+                  </div>
+                  <p class="check-item__meta">Done by Amit · Yesterday</p>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+            </tr>
+            <tr>
+              <td class="col-index">6</td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell">
+                <div class="check-item check-item--done">
+                  <div class="check-item__row">
+                    <input class="check-item__input" type="checkbox" id="r6-amit" checked />
+                    <label class="check-item__label" for="r6-amit">Offline maps download</label>
+                  </div>
+                  <p class="check-item__meta">Done by Amit · Yesterday</p>
+                </div>
+              </td>
+              <td class="grid-cell grid-cell--empty"></td>
+              <td class="grid-cell grid-cell--empty"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="page-subtitle" style="margin-top: 1rem; max-width: 52rem;">
+        <strong>Grid rules (mockup):</strong> each collaborator has a column; each new item creates a new row with text in that person’s cell only.
+        Anyone can check any box; “Done by …” shows who completed it.
+      </p>
+    </main>
+  </div>
+
+  <!-- Invite modal (visible for mockup — remove .modal-backdrop fixed in prod or toggle with JS) -->
+  <div class="modal-backdrop" id="invite-modal" role="dialog" aria-labelledby="invite-title" aria-modal="true">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="invite-title">Invite collaborators</h2>
+        <p>They’ll see this list after signing in with the invited Gmail address.</p>
+      </div>
+      <div class="modal__body">
+        <div class="field">
+          <label for="invite-email">Email address</label>
+          <input id="invite-email" type="email" placeholder="friend@gmail.com" />
+          <p class="field__hint">Must match their Google account email.</p>
+        </div>
+        <div class="field">
+          <label for="invite-link">Or share link (invited emails only)</label>
+          <div class="copy-link">
+            <input id="invite-link" type="text" readonly value="https://you.github.io/MyChecklist/list/goa-2026?invite=…" />
+            <button type="button" class="btn btn--secondary btn--sm">Copy</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <a class="btn btn--ghost" href="checklist.html">Cancel</a>
+        <button type="button" class="btn btn--primary">Send invite</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

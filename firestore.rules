@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(listId) {
+      return signedIn()
+        && request.auth.uid in get(/databases/$(database)/documents/checklists/$(listId)).data.memberIds;
+    }
+
+    function isOwner(listId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/checklists/$(listId)).data.createdBy == request.auth.uid;
+    }
+
+    function authEmailLower() {
+      return request.auth.token.email.lower();
+    }
+
+    match /checklists/{listId} {
+      allow read: if isMember(listId)
+        || (signedIn() && authEmailLower() in resource.data.invitedEmails);
+
+      allow create: if signedIn()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.auth.uid in request.resource.data.memberIds
+        && request.resource.data.memberIds.size() == 1
+        && request.resource.data.invitedEmails.size() == 0;
+
+      // members bump updatedAt when adding/checking items
+      allow update: if isOwner(listId)
+        || (isMember(listId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt']))
+        || (signedIn()
+          && authEmailLower() in resource.data.invitedEmails
+          && request.auth.uid in request.resource.data.memberIds
+          && request.resource.data.memberIds.size() == resource.data.memberIds.size() + 1
+          && request.resource.data.invitedEmails.size() == resource.data.invitedEmails.size() - 1
+          && request.resource.data.createdBy == resource.data.createdBy
+          && request.resource.data.title == resource.data.title);
+
+      allow delete: if isOwner(listId);
+
+      match /members/{memberId} {
+        allow read: if isMember(listId);
+        allow create: if signedIn() && (
+          (isOwner(listId) && memberId != request.auth.uid)
+          || (memberId == request.auth.uid
+            && authEmailLower() in get(/databases/$(database)/documents/checklists/$(listId)).data.invitedEmails)
+        );
+        allow update, delete: if isOwner(listId);
+      }
+
+      match /items/{itemId} {
+        allow read: if isMember(listId);
+
+        allow create: if isMember(listId)
+          && request.resource.data.addedBy == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 500
+          && request.resource.data.completed == false;
+
+        allow update: if isMember(listId)
+          && request.resource.data.addedBy == resource.data.addedBy
+          && request.resource.data.text == resource.data.text
+          && request.resource.data.sortOrder == resource.data.sortOrder;
+
+        allow delete: if isMember(listId)
+          && (resource.data.addedBy == request.auth.uid || isOwner(listId));
+      }
+    }
+  }
+}

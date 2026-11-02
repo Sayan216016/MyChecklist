@@ -48,6 +48,9 @@ service cloud.firestore {
         allow read: if isMember(listId);
         allow create: if signedIn() && (
           (isOwner(listId) && memberId != request.auth.uid)
+          // creator's own member doc, written in the same batch as the list
+          || (memberId == request.auth.uid
+            && getAfter(/databases/$(database)/documents/checklists/$(listId)).data.createdBy == request.auth.uid)
           || (memberId == request.auth.uid
             && authEmailLower() in get(/databases/$(database)/documents/checklists/$(listId)).data.invitedEmails)
         );

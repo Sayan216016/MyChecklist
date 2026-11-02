@@ -8,7 +8,7 @@ Last updated: 3 November 2026
 
 ## One-line resume
 
-v1 app is built; finish Firebase + GitHub in `internal/firebase-github-setup.html`, then smoke-test sign-in, lists, and invites on the live URL.
+v1 app is live and configured (Firebase project `mychecklist-194ac`); sign-in and list creation work on the live URL. Next: test invites with a second Google account.
 
 ---
 
@@ -27,11 +27,13 @@ v1 app is built; finish Firebase + GitHub in `internal/firebase-github-setup.htm
 |------|--------|--------|
 | UI mockup | Done | `mockup/` — static reference only |
 | v1 app | Done | `src/`, `index.html`, `public/css/styles.css` |
-| `firebase-config.js` | **Not configured** | Still `YOUR_API_KEY` placeholders |
-| Firestore rules (cloud) | Unknown | Publish `firestore.rules` from repo root |
-| Firestore indexes | Unknown | `firestore.indexes.json` or console link on first query |
-| GitHub Actions deploy | Verify | `.github/workflows/deploy-pages.yml` |
-| GitHub Pages source | Should be **Actions** | App builds to `dist/`, not repo root |
+| `firebase-config.js` | Done | Project `mychecklist-194ac` |
+| Firestore database | Done | ID `(default)`, **Standard** edition, Native mode |
+| Firestore rules (cloud) | Done | Deployed via `firebase deploy --only firestore:rules` |
+| Firestore indexes | Done | Deployed from `firestore.indexes.json` |
+| GitHub Actions deploy | Done | `.github/workflows/deploy-pages.yml` runs green |
+| GitHub Pages source | Done | **GitHub Actions** (serves `dist/`) |
+| Invite flow | **Not tested** | Needs a second Google account |
 
 ---
 
@@ -113,19 +115,20 @@ firebase deploy --only firestore
 
 See full steps in `firebase-github-setup.html`.
 
-- [ ] `firebase-config.js` filled in
-- [ ] Google sign-in enabled
-- [ ] Authorized domain `sayan216016.github.io`
-- [ ] `firestore.rules` published (+ indexes)
-- [ ] GitHub Pages = GitHub Actions
-- [ ] Push `master`, workflow green
-- [ ] Test sign-in → create list → invite → second account
+- [x] `firebase-config.js` filled in
+- [x] Google sign-in enabled
+- [x] Authorized domain `sayan216016.github.io`
+- [x] `firestore.rules` published (+ indexes)
+- [x] GitHub Pages = GitHub Actions
+- [x] Push `master`, workflow green
+- [x] Test sign-in → create list
+- [ ] Test invite → second account
 
 ---
 
 ## Suggested next work
 
-1. Complete configuration and tests in setup doc.
+1. Test the invite flow with a second Google account.
 2. Owner name on “Shared with me” cards.
 3. UI to edit/delete single items (rules partially there).
 4. Invite modal: backdrop / Escape to close.
@@ -140,6 +143,7 @@ See full steps in `firebase-github-setup.html`.
 - Real-time via Firestore `onSnapshot`.
 - Mobile: column tabs; desktop: full grid.
 - Repo: `Sayan216016/MyChecklist`, branch `master`.
+- Firestore rules: list reads check `resource.data.memberIds` (not `get()`) so queries pass; the creator's own member doc is allowed via `getAfter()` in the create batch; members may update only `updatedAt` on the list doc.
 
 ---
 

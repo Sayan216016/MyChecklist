@@ -28,7 +28,7 @@ The `mockup/` pages were the spec; everything from `mockup/css/polish.css` is me
 - New-checklist first tasks are a **second write** after the list: the item rule checks membership with `get()`, which can't see a list created in the same batch.
 - Home progress uses Firestore **count queries** per list (`getListSummary` in `db.js`), refetched when that list's `updatedAt` changes. No stored counters, so old lists work.
 - `createdByName` is stored on new lists; older lists fall back to the owner's `members/{uid}` doc.
-- **Share link:** Invite popup includes a **preview link** (`shareListUrl` → Cloud Function) for WhatsApp/OG crawlers; email invite still required to access the list. Hash `#/list/…` links do not carry checklist title to chat apps.
+- **Link previews:** `index.html` has Open Graph tags + `public/og-image.jpg`, so any shared link shows the app card. Per-checklist titles in previews would need a server (Cloud Function → Blaze plan); dropped for now since chat apps ignore the `#/list/…` hash.
 
 ---
 
@@ -130,17 +130,14 @@ npm run dev
 npm run build
 git push origin master
 firebase deploy --only firestore:rules --project mychecklist-194ac
-firebase deploy --only functions --project mychecklist-194ac
 ```
-
-Functions need Blaze billing; they serve Open Graph HTML for share links. Site OG image: `public/og-image.jpg`.
 
 ---
 
 ## Decisions (don’t re-litigate unless changing product)
 
 - Google-only auth.
-- Invite by email only (lowercase, must match Google account). Preview link for chat apps; access still invite-gated.
+- Invite by email only (lowercase, must match Google account). No share-by-link.
 - Real-time via Firestore `onSnapshot`; views re-render `#app` from state.
 - Mobile: column tabs; desktop: full grid. Mobile-first: every loading state needs a mobile shape.
 - Task edit/delete: only the task's creator or the list owner; everyone else can only check/uncheck.

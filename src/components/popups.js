@@ -95,7 +95,7 @@ export function openAddTasksPopup(onAdd) {
   bindSubmit(el, () => onAdd(parseLines(el.querySelector("textarea").value)));
 }
 
-export function openInvitePopup(shareUrl, onInvite) {
+export function openInvitePopup(onInvite) {
   const el = openModal({
     title: "Invite collaborators",
     subtitle: "They’ll see this list after signing in with the invited Gmail address.",
@@ -104,29 +104,10 @@ export function openInvitePopup(shareUrl, onInvite) {
         <label for="invite-email">Email address</label>
         <input id="invite-email" type="email" placeholder="friend@gmail.com" />
         <p class="field__hint">Must match their Google account email. The list appears on their home page once they sign in.</p>
-      </div>
-      <div class="field">
-        <label for="invite-link">Link preview (WhatsApp, etc.)</label>
-        <div class="copy-link">
-          <input id="invite-link" type="text" readonly value="${shareUrl.replace(/"/g, "&quot;")}" />
-          <button type="button" class="btn btn--secondary btn--sm" data-copy-link>Copy</button>
-        </div>
-        <p class="field__hint">Shows the checklist name in chat apps. Opens only for invited Gmail addresses.</p>
       </div>`,
     footer: `
       <button type="button" class="btn btn--ghost" data-close>Cancel</button>
       <button type="button" class="btn btn--primary" data-submit>Send invite</button>`,
-  });
-  el.querySelector("[data-copy-link]")?.addEventListener("click", async () => {
-    const input = el.querySelector("#invite-link");
-    try {
-      await navigator.clipboard.writeText(input.value);
-      showToast("Link copied");
-    } catch {
-      input.select();
-      const ok = document.execCommand("copy");
-      showToast(ok ? "Link copied" : "Couldn’t copy — select the link and copy manually", !ok);
-    }
   });
   bindSubmit(el, () => onInvite(el.querySelector("#invite-email").value));
 }

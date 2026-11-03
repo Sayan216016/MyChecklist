@@ -34,8 +34,6 @@ import {
 } from "./components/popups.js";
 import { showToast } from "./utils/helpers.js";
 import { initThemeToggle } from "./utils/theme.js";
-import { shareListUrl } from "./config/site.js";
-
 const appEl = document.getElementById("app");
 
 let currentUser = null;
@@ -306,7 +304,7 @@ function mountList(user, listId) {
     });
 
     appEl.querySelector("[data-action=open-invite]")?.addEventListener("click", () => {
-      openInvitePopup(shareListUrl(listId), async (email) => {
+      openInvitePopup(async (email) => {
         await inviteByEmail(listId, email);
         showToast("Invite sent");
       });

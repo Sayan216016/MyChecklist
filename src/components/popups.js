@@ -61,7 +61,7 @@ export function openNewChecklistPopup(onCreate) {
       <div class="field">
         <label for="new-list-tasks">First tasks (optional) <span class="field__count"></span></label>
         <textarea id="new-list-tasks" placeholder="One task per line"></textarea>
-        <p class="field__hint">Each line becomes a task in your column.</p>
+        <p class="field__hint">Each line becomes a task on the shared list.</p>
       </div>`,
     footer: `
       <button type="button" class="btn btn--ghost" data-close>Cancel</button>
@@ -75,7 +75,7 @@ export function openNewChecklistPopup(onCreate) {
 export function openAddTasksPopup(onAdd) {
   const el = openModal({
     title: "Add tasks",
-    subtitle: "Each line becomes a new task in your column.",
+    subtitle: "Each line becomes a new task on this shared list.",
     wide: true,
     body: `
       <div class="field">

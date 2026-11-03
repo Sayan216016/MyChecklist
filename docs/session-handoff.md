@@ -2,7 +2,7 @@
 
 **Use this file** when you (or Cursor) pick up the project again. Code structure and conventions are in the root [`README.md`](../README.md). Firebase/GitHub setup steps: [`firebase-github-setup.html`](./firebase-github-setup.html).
 
-Last updated: 3 November 2026
+Last updated: 4 November 2026
 
 ---
 
@@ -34,17 +34,24 @@ The `mockup/` pages were the spec; everything from `mockup/css/polish.css` is me
 
 ## Open issues / next steps
 
-1. **Task edit by a collaborator** reported "insufficient permissions" once. The edit rule in `firestore.rules` is deployed (CLI said "already up to date"), so retest; if it still fails, capture the console error and check the items `update` rule.
-2. Nice-to-have, not built: member avatars on home cards (mockup shows them; needs member data per list); Undo for more than the last of several quick deletes; >500-line paste in Add tasks (one batch limit).
-3. Ignore or remove unrelated `.sf/` Salesforce metadata.
-4. **Firestore reads** run several times higher than writes. That's expected: live listeners, plus 2 count queries per home card. Possible savings if needed: drop the redundant `getChecklistOnce` in `mountList` (the list listener already covers it), or store `itemCount`/`doneCount` on the list doc so home needs no count queries (keep `getListSummary` as the fallback for old lists).
+### v1.2 (built 4 Nov 2026)
+
+1. **Shared sticky-note wall** — live in `src/views/checklist.js` + `.task-wall`. One list; “Added by” attribution; desktop wrap grid; mobile single column (no tabs).
+2. **Deleted list while viewing** — `listDeleted` in `main.js`: toast + home on live delete; `renderListGone` after refresh (no infinite skeleton).
+
+### Earlier backlog
+
+3. **Task edit by a collaborator** reported "insufficient permissions" once. The edit rule in `firestore.rules` is deployed (CLI said "already up to date"), so retest; if it still fails, capture the console error and check the items `update` rule.
+4. Nice-to-have, not built: member avatars on home cards (mockup shows them; needs member data per list); Undo for more than the last of several quick deletes; >500-line paste in Add tasks (one batch limit).
+5. Ignore or remove unrelated `.sf/` Salesforce metadata.
+6. **Firestore reads** run several times higher than writes. That's expected: live listeners, plus 2 count queries per home card. Possible savings if needed: drop the redundant `getChecklistOnce` in `mountList` (the list listener already covers it), or store `itemCount`/`doneCount` on the list doc so home needs no count queries (keep `getListSummary` as the fallback for old lists).
 ---
 
 ## Product summary
 
 - **What:** Shared checklists for Google users.
-- **Layout:** Each collaborator = **column**; each task they add = **new row**.
-- **Rules:** Anyone on the list can tick any task; UI shows **who completed** it. Only the **creator** deletes the whole list. Task text edit/delete: task's creator or list owner.
+- **Layout:** One **shared list** per checklist. Desktop: tasks as sticky notes in a **wrap grid** (`.task-wall`); mobile: same tasks, one column. Left stripe / “Added by” = who typed it, not who must do it.
+- **Rules:** Anyone on the list can add tasks and tick any task; UI shows **who completed** it. Only the **creator** deletes the whole list. Task text edit/delete: task's creator or list owner.
 - **Stack:** Vite (vanilla JS) + Firebase Auth (Google) + Firestore + GitHub Pages.
 
 ---
@@ -138,7 +145,7 @@ firebase deploy --only firestore:rules --project mychecklist-194ac
 - Google-only auth.
 - Invite by email only (lowercase, must match Google account). No share-by-link.
 - Real-time via Firestore `onSnapshot`; views re-render `#app` from state.
-- Mobile: column tabs; desktop: full grid. Mobile-first: every loading state needs a mobile shape.
+- Mobile: single shared list; desktop: **sticky-note wall** (v1.2 — replaces row grid and per-person columns). Mobile-first: every loading state needs a mobile shape.
 - Task edit/delete: only the task's creator or the list owner; everyone else can only check/uncheck.
 - Tasks are cards; actions always visible to those allowed (no hover-only).
 - Images: SVG drawn in-project (no stock assets).

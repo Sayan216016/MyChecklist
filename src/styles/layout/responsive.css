@@ -5,12 +5,8 @@
     font-size: 1.125rem;
   }
 
-  .grid-scroll--desktop {
+  .checklist-board--desktop {
     display: none;
-  }
-
-  .mobile-tabs {
-    display: flex;
   }
 
   .mobile-list {

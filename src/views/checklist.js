@@ -1,9 +1,17 @@
 /**
- * Checklist page: one column per collaborator, one row per task.
- * Desktop = full grid; mobile = one column at a time via tabs. Both render the same task cards.
+ * Checklist page: one shared list — anyone adds, anyone ticks.
+ * Desktop = sticky-note wrap grid; mobile = same tasks, one column.
  */
 import { escapeHtml, formatWhen, memberStripeClass } from "../utils/helpers.js";
 import { renderHeader, avatarHtml } from "../components/layout.js";
+
+function addedMeta(item, members, currentUid) {
+  const m = members.find((x) => x.uid === item.addedBy);
+  let who = "someone";
+  if (item.addedBy === currentUid) who = "you";
+  else if (m) who = escapeHtml(m.displayName || m.email);
+  return `<p class="item-card__added">Added by ${who}</p>`;
+}
 
 function doneMeta(item, currentUid) {
   if (!item.completed || !item.completedByName) return "";
@@ -19,9 +27,10 @@ function doneMeta(item, currentUid) {
  * view: { uid, isOwner, editingId, editDraft, poppedId, leavingIds }
  * ✎ / 🗑 render only for the task's creator or the list owner; everyone else can just tick.
  */
-function itemCard(item, view, idPrefix) {
+function itemCard(item, view, members, idPrefix) {
   const cls = [
     "item-card",
+    "item-card--sticky",
     memberStripeClass(item.addedBy),
     item.completed ? "item-card--done" : "",
     view.leavingIds.has(item.id) ? "item-card--leaving" : "",
@@ -54,36 +63,50 @@ function itemCard(item, view, idPrefix) {
           <input class="check-item__input${view.poppedId === item.id ? " is-fresh" : ""}" type="checkbox" id="${id}" data-item-id="${item.id}" ${item.completed ? "checked" : ""} />
           <label class="check-item__label" for="${id}">${escapeHtml(item.text)}</label>
         </div>
+        ${addedMeta(item, members, view.uid)}
         ${doneMeta(item, view.uid)}
       </div>
       ${actions}
     </div>`;
 }
 
-function renderMobileView(items, members, view, activeMemberUid, freshIds) {
-  const member = members.find((m) => m.uid === activeMemberUid) || members[0];
-  if (!member) return "";
-
-  const rows = items
-    .map((item, i) =>
-      item.addedBy === member.uid
-        ? `
-        <article class="mobile-row-card${freshIds.has(item.id) ? " row-enter" : ""}">
-          <div class="mobile-row-card__index">Row ${i + 1}</div>
-          ${itemCard(item, view, "m")}
-        </article>`
-        : "",
-    )
+function renderTaskWall(items, members, view, idPrefix, freshIds, { mobile }) {
+  if (!items.length) {
+    return `<p class="page-subtitle">No tasks yet. Add the first one above.</p>`;
+  }
+  return items
+    .map((item) => {
+      const card = itemCard(item, view, members, idPrefix);
+      const enter = freshIds.has(item.id) ? " row-enter" : "";
+      if (mobile) return `<article class="mobile-row-card${enter}">${card}</article>`;
+      return `<div class="task-wall__cell${enter}">${card}</div>`;
+    })
     .join("");
+}
 
-  const addBtn =
-    member.uid === view.uid
-      ? `<button type="button" class="btn btn--secondary btn--sm col-header__add-btn" data-action="add-tasks" style="margin-bottom: 0.75rem;">+ Add tasks</button>`
-      : "";
+const addTasksBar = `
+  <div class="checklist-actions">
+    <button type="button" class="btn btn--secondary btn--sm col-header__add-btn" data-action="add-tasks">+ Add tasks</button>
+    <p class="checklist-actions__hint">Anyone can add · anyone can tick</p>
+  </div>`;
 
+export function renderListGone(user, title) {
+  const name = title ? escapeHtml(title) : "This checklist";
   return `
-    ${addBtn}
-    ${rows || `<p class="page-subtitle">No tasks in this column yet.</p>`}`;
+    <div class="app-shell">
+      ${renderHeader(user)}
+      <main class="app-main app-main--wide">
+        <a class="btn btn--secondary btn--sm back-btn" href="#/" data-link>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Dashboard
+        </a>
+        <div class="list-gone" role="status">
+          <h2 class="list-gone__title">This checklist was deleted</h2>
+          <p class="list-gone__text">The owner removed “${name}”. You can’t open it anymore.</p>
+          <a class="btn btn--primary" href="#/" data-link>Back to dashboard</a>
+        </div>
+      </main>
+    </div>`;
 }
 
 export function renderChecklist(
@@ -91,7 +114,7 @@ export function renderChecklist(
   list,
   members,
   items,
-  { mobileMemberUid, editingId, editDraft, poppedId, leavingIds, freshIds },
+  { editingId, editDraft, poppedId, leavingIds, freshIds },
 ) {
   const isOwner = list.createdBy === user.uid;
   const view = { uid: user.uid, isOwner, editingId, editDraft, poppedId, leavingIds };
@@ -111,67 +134,14 @@ export function renderChecklist(
     })
     .join("");
 
-  const mobileTabs = members
-    .map((m) => {
-      const active = m.uid === mobileMemberUid;
-      const label = m.uid === user.uid ? "You" : escapeHtml((m.displayName || m.email).split(" ")[0]);
-      return `<button type="button" class="mobile-tabs__tab${active ? " mobile-tabs__tab--active" : ""}" data-mobile-tab="${m.uid}" role="tab">${label}</button>`;
-    })
-    .join("");
-
-  const headerCols = members
-    .map((m) => {
-      const isYou = m.uid === user.uid;
-      const isListOwner = m.uid === list.createdBy;
-      const addRow = isYou
-        ? `<button type="button" class="btn btn--secondary btn--sm col-header__add-btn" data-action="add-tasks">+ Add tasks</button>`
-        : "";
-      const badge = isListOwner ? `<span class="col-header__badge">Owner</span>` : "";
-      return `
-        <th class="col-member" scope="col">
-          <div class="col-header">
-            <div class="col-header__inner">
-              ${avatarHtml(m, { size: "lg" })}
-              <span class="col-header__name">${isYou ? "You" : escapeHtml(m.displayName || m.email)}</span>
-              ${badge}
-              ${addRow}
-            </div>
-          </div>
-        </th>`;
-    })
-    .join("");
-
-  const bodyRows = items
-    .map((item, index) => {
-      const cells = members
-        .map((m) =>
-          item.addedBy === m.uid
-            ? `<td class="grid-cell">${itemCard(item, view, "d")}</td>`
-            : `<td class="grid-cell grid-cell--empty"></td>`,
-        )
-        .join("");
-      return `
-        <tr${freshIds.has(item.id) ? ' class="row-enter"' : ""}>
-          <td class="col-index">${index + 1}</td>
-          ${cells}
-        </tr>`;
-    })
-    .join("");
-
-  const emptyRow =
-    items.length === 0
-      ? `
-        <tr>
-          <td class="col-index">—</td>
-          ${members.map(() => `<td class="grid-cell grid-cell--empty"></td>`).join("")}
-        </tr>`
-      : "";
-
   const ownerActions = isOwner
     ? `
       <button type="button" class="btn btn--secondary btn--sm" data-action="open-invite">Invite</button>
       <button type="button" class="btn btn--danger btn--sm" data-action="delete-list">Delete list</button>`
     : "";
+
+  const mobileTasks = renderTaskWall(items, members, view, "m", freshIds, { mobile: true });
+  const desktopTasks = renderTaskWall(items, members, view, "d", freshIds, { mobile: false });
 
   return `
     <div class="app-shell">
@@ -195,24 +165,14 @@ export function renderChecklist(
           ${memberPills}
         </div>
 
-        <div class="mobile-tabs mobile-only" role="tablist" aria-label="Collaborator columns">
-          ${mobileTabs}
+        <div class="mobile-only">${addTasksBar}</div>
+        <div class="mobile-list mobile-only" role="list" aria-label="Shared tasks">
+          ${mobileTasks}
         </div>
 
-        <div class="mobile-list mobile-only">
-          ${renderMobileView(items, members, view, mobileMemberUid, freshIds)}
-        </div>
-
-        <div class="grid-scroll grid-scroll--desktop">
-          <table class="checklist-grid" role="grid" aria-label="Collaborative checklist">
-            <thead>
-              <tr>
-                <th class="col-index" scope="col">#</th>
-                ${headerCols}
-              </tr>
-            </thead>
-            <tbody>${bodyRows}${emptyRow}</tbody>
-          </table>
+        <div class="checklist-board--desktop">${addTasksBar}</div>
+        <div class="checklist-board checklist-board--desktop" role="region" aria-label="Shared tasks">
+          <div class="task-wall">${desktopTasks}</div>
         </div>
       </main>
     </div>`;

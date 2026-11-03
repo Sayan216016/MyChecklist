@@ -499,7 +499,38 @@ img {
   color: var(--color-primary);
 }
 
-/* ——— Grid table (desktop) ——— */
+/* ——— Shared list: sticky notes in a wrap grid (v1.2) ——— */
+
+.checklist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.checklist-actions__hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.checklist-board {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  padding: 0.75rem;
+}
+
+.task-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+
+/* ——— Grid table (desktop, deprecated — replaced by checklist-board) ——— */
 
 .grid-scroll {
   overflow: auto;
@@ -841,7 +872,8 @@ img {
     font-size: 1.125rem;
   }
 
-  .grid-scroll--desktop {
+  .grid-scroll--desktop,
+  .checklist-board--desktop {
     display: none;
   }
 

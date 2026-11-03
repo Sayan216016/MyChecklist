@@ -225,6 +225,7 @@ body {
 .list-card,
 .members-bar,
 .grid-scroll,
+.checklist-board,
 .empty-state,
 .item-card {
   background: color-mix(in srgb, var(--color-surface) 85%, transparent);
@@ -368,6 +369,18 @@ body {
 .skeleton-mobile .item-card { align-items: center; }
 .skeleton-mobile .skeleton--cell { flex: 1; max-width: 80%; margin: 0; }
 
+.skeleton--note {
+  height: 52px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
 .list-card--skeleton {
   pointer-events: none;
   animation: none;
@@ -470,6 +483,58 @@ body {
 .item-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
+}
+
+/* Sticky notes: tasks stack in each collaborator column (no shared row grid) */
+.item-card--sticky {
+  background: color-mix(in srgb, var(--color-surface) 92%, #fef08a 8%);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-border) 70%, transparent),
+    2px 3px 8px rgba(16, 24, 40, 0.07);
+}
+
+[data-theme="dark"] .item-card--sticky {
+  background: color-mix(in srgb, var(--color-surface) 88%, #ca8a04 12%);
+}
+
+.item-card--sticky.item-card--done {
+  background: var(--color-done-soft);
+}
+
+.task-wall .item-card--sticky:nth-child(odd) {
+  transform: rotate(-0.35deg);
+}
+
+.task-wall .item-card--sticky:nth-child(even) {
+  transform: rotate(0.3deg);
+}
+
+.task-wall .item-card--sticky:hover {
+  transform: translateY(-2px) rotate(0deg);
+  z-index: 1;
+}
+
+/* List deleted while viewing (live app redirects; no skeleton loop) */
+.list-gone {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.list-gone h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.list-gone p {
+  margin: 0 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
 }
 
 .item-card .check-item {

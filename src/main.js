@@ -22,7 +22,7 @@ import {
 } from "./services/db.js";
 import { renderSignIn } from "./views/signin.js";
 import { renderHome } from "./views/home.js";
-import { renderChecklist } from "./views/checklist.js";
+import { renderChecklist, renderListGone } from "./views/checklist.js";
 import { renderHeader } from "./components/layout.js";
 import { checklistSkeleton } from "./components/skeletons.js";
 import { closeModal } from "./components/modal.js";
@@ -153,8 +153,9 @@ function mountList(user, listId) {
   let list = null;
   let members = [];
   let items = null;
-  let mobileMemberUid = user.uid;
   let accessDenied = false;
+  let listDeleted = false;
+  let deletedListTitle = "";
   let editingId = null;
   let editDraft = "";
   let poppedId = null;
@@ -206,6 +207,11 @@ function mountList(user, listId) {
   };
 
   const rerender = () => {
+    if (listDeleted) {
+      setApp(renderListGone(user, deletedListTitle));
+      bindSignOut(appEl);
+      return;
+    }
     if (accessDenied) {
       setApp(`
         <div class="app-shell">
@@ -217,7 +223,7 @@ function mountList(user, listId) {
         </div>`);
       return;
     }
-    if (!list || !items || !members.length) {
+    if (!list || items === null || !members.length) {
       setApp(`
         <div class="app-shell">
           ${renderHeader(user)}
@@ -229,7 +235,6 @@ function mountList(user, listId) {
 
     setApp(
       renderChecklist(user, list, members, items, {
-        mobileMemberUid,
         editingId,
         editDraft,
         poppedId,
@@ -250,13 +255,6 @@ function mountList(user, listId) {
   };
 
   const bindListEvents = () => {
-    appEl.querySelectorAll("[data-mobile-tab]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        mobileMemberUid = btn.getAttribute("data-mobile-tab");
-        rerender();
-      });
-    });
-
     appEl.querySelectorAll("[data-item-id]").forEach((input) => {
       input.addEventListener("change", async () => {
         const item = items.find((i) => i.id === input.getAttribute("data-item-id"));
@@ -321,12 +319,15 @@ function mountList(user, listId) {
   cleanup.push(
     subscribeChecklist(listId, (snap) => {
       if (!snap.exists()) {
-        accessDenied = true;
+        listDeleted = true;
         list = null;
+        showToast("Checklist deleted by the owner");
+        navigate("/");
         rerender();
         return;
       }
       list = { id: snap.id, ...snap.data() };
+      deletedListTitle = list.title || "";
       if (!list.memberIds?.includes(user.uid)) {
         accessDenied = true;
         rerender();
@@ -356,8 +357,12 @@ function mountList(user, listId) {
   );
 
   getChecklistOnce(listId).then((data) => {
-    if (!data) accessDenied = true;
-    else if (!data.memberIds?.includes(user.uid)) accessDenied = true;
+    if (!data) {
+      listDeleted = true;
+      return rerender();
+    }
+    deletedListTitle = data.title || "";
+    if (!data.memberIds?.includes(user.uid)) accessDenied = true;
     rerender();
   });
 

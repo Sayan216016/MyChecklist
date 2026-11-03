@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>List deleted — MyChecklist (mockup)</title>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/polish.css" />
+</head>
+<body>
+  <div class="mock-banner">
+    UI mockup — v1.2 behavior when the owner deletes a list you still have open (e.g. after refresh).
+    <a href="checklist.html">Checklist</a> ·
+    <a href="home.html">Home</a>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="app-header__brand" href="home.html">
+        <span class="app-header__logo" aria-hidden="true">✓</span>
+        MyChecklist
+      </a>
+      <div class="app-header__actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark theme"></button>
+        <div class="user-chip">
+          <span class="avatar avatar--initials avatar--sm" aria-hidden="true">SM</span>
+          <span>Sujan M.</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main app-main--wide">
+      <a class="btn btn--secondary btn--sm back-btn" href="home.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Dashboard
+      </a>
+
+      <div class="list-gone" role="status">
+        <h2>This checklist was deleted</h2>
+        <p>The owner removed “Bikin - bou”. You can’t open it anymore.</p>
+        <a class="btn btn--primary" href="home.html">Back to dashboard</a>
+      </div>
+
+      <p class="mock-label" style="margin-top: 2rem;">
+        <strong>Live app (build spec):</strong> if you’re on <code>#/list/…</code> and the doc disappears, stop the checklist skeleton immediately — show this message (or toast + auto <code>navigate("/")</code>). Do <em>not</em> treat deletion as “No access” and do <em>not</em> leave the user on an infinite skeleton after refresh.
+      </p>
+    </main>
+  </div>
+
+  <div class="toast" role="status" style="position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);">
+    Checklist deleted by the owner
+  </div>
+</body>
+</html>

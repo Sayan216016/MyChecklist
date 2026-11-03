@@ -33,6 +33,37 @@
   border-left-color: var(--color-done);
 }
 
+.item-card--sticky {
+  background: color-mix(in srgb, var(--color-surface) 92%, #fef08a 8%);
+}
+
+[data-theme="dark"] .item-card--sticky {
+  background: color-mix(in srgb, var(--color-surface) 88%, #ca8a04 12%);
+}
+
+.item-card--sticky.item-card--done {
+  background: var(--color-done-soft);
+}
+
+.task-wall__cell:nth-child(odd) .item-card--sticky {
+  transform: rotate(-0.35deg);
+}
+
+.task-wall__cell:nth-child(even) .item-card--sticky {
+  transform: rotate(0.3deg);
+}
+
+.task-wall__cell .item-card--sticky:hover {
+  transform: translateY(-2px) rotate(0deg);
+  z-index: 1;
+}
+
+.item-card__added {
+  margin: 0.15rem 0 0 1.625rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-subtle);
+}
+
 .member-color-2 { --member-color: #7c3aed; }
 .member-color-3 { --member-color: #db2777; }
 .member-color-4 { --member-color: #059669; }
@@ -134,5 +165,5 @@
 /* ——— New row slides in; deleted row fades while Undo is offered ——— */
 
 .row-enter { animation: fade-up 0.3s var(--ease-out) both; }
-.row-enter .item-card { background: var(--color-primary-soft); }
+.row-enter > .item-card { background: var(--color-primary-soft); }
 .item-card--leaving { opacity: 0.35; pointer-events: none; }

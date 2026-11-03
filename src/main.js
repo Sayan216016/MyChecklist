@@ -158,8 +158,6 @@ function mountList(user, listId) {
   const leavingIds = new Set();
   const pendingDeletes = new Map(); // itemId → timer; delete is committed after the Undo window
 
-  const shareUrl = `${location.origin}${location.pathname}#/list/${listId}`;
-
   const cleanup = [];
 
   const commitDelete = (itemId) => {
@@ -302,7 +300,7 @@ function mountList(user, listId) {
     });
 
     appEl.querySelector("[data-action=open-invite]")?.addEventListener("click", () => {
-      openInvitePopup(shareUrl, async (email) => {
+      openInvitePopup(async (email) => {
         await inviteByEmail(listId, email);
         showToast("Invite sent");
       });

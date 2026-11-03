@@ -4,7 +4,7 @@
  * stays open with a toast on failure.
  */
 import { openModal, closeModal } from "./modal.js";
-import { escapeHtml, parseLines, showToast } from "../utils/helpers.js";
+import { parseLines, showToast } from "../utils/helpers.js";
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
@@ -95,7 +95,7 @@ export function openAddTasksPopup(onAdd) {
   bindSubmit(el, () => onAdd(parseLines(el.querySelector("textarea").value)));
 }
 
-export function openInvitePopup(shareUrl, onInvite) {
+export function openInvitePopup(onInvite) {
   const el = openModal({
     title: "Invite collaborators",
     subtitle: "They’ll see this list after signing in with the invited Gmail address.",
@@ -103,27 +103,11 @@ export function openInvitePopup(shareUrl, onInvite) {
       <div class="field">
         <label for="invite-email">Email address</label>
         <input id="invite-email" type="email" placeholder="friend@gmail.com" />
-        <p class="field__hint">Must match their Google account email.</p>
-      </div>
-      <div class="field">
-        <label for="invite-link">Share link</label>
-        <div class="copy-link">
-          <input id="invite-link" type="text" readonly value="${escapeHtml(shareUrl)}" />
-          <button type="button" class="btn btn--secondary btn--sm" data-copy>Copy</button>
-        </div>
-        <p class="field__hint">Opens only for people you’ve invited above.</p>
+        <p class="field__hint">Must match their Google account email. The list appears on their home page once they sign in.</p>
       </div>`,
     footer: `
       <button type="button" class="btn btn--ghost" data-close>Cancel</button>
       <button type="button" class="btn btn--primary" data-submit>Send invite</button>`,
-  });
-  el.querySelector("[data-copy]").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      showToast("Link copied");
-    } catch {
-      showToast("Could not copy link", true);
-    }
   });
   bindSubmit(el, () => onInvite(el.querySelector("#invite-email").value));
 }

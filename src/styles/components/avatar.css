@@ -33,12 +33,31 @@
 .avatar--initials.avatar--color-3 { background: #db2777; }
 .avatar--initials.avatar--color-4 { background: #059669; }
 
+/* Header pill: avatar · name | Sign out. On mobile the name hides (see responsive.css). */
 .user-chip {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 3px 3px 3px 4px;
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.user-chip__name {
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.user-chip .btn {
+  border-radius: 999px;
+  white-space: nowrap;
+  border-left: 1px solid var(--color-border);
 }
 
 

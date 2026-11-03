@@ -1,5 +1,29 @@
 /* ——— Checklist header ——— */
 
+/* secondary button + arrow; translucent like the cards, arrow nudges left on hover */
+.back-btn {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+}
+
+.back-btn svg {
+  transition: transform 0.2s var(--ease-out);
+}
+
+.back-btn:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.back-btn:hover svg {
+  transform: translateX(-2px);
+}
+
 .checklist-toolbar {
   display: flex;
   flex-wrap: wrap;

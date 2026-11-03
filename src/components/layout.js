@@ -16,15 +16,15 @@ export function renderHeader(user, { showSignOut = true } = {}) {
       </a>
       <div class="app-header__actions">
         ${themeToggleHtml()}
-        <div class="user-chip">
+        <div class="user-chip" title="${name}">
           ${
             user.photoURL
               ? `<img class="avatar avatar--sm" src="${escapeHtml(user.photoURL)}" alt="" />`
               : `<span class="avatar avatar--initials avatar--sm" aria-hidden="true">${ini}</span>`
           }
-          <span>${name}</span>
+          <span class="user-chip__name">${name}</span>
+          ${signOutBtn}
         </div>
-        ${signOutBtn}
       </div>
     </header>`;
 }

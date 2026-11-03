@@ -20,6 +20,29 @@
   .list-card__chevron {
     display: none;
   }
+
+  /* header: brand · toggle · [avatar | Sign out] with room to breathe */
+  .app-header {
+    padding: 0 1rem;
+  }
+
+  .app-header__actions {
+    gap: 0.5rem;
+  }
+
+  .user-chip__name {
+    display: none;
+  }
+
+  .user-chip {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-header__brand {
+    font-size: 1rem;
+  }
 }
 
 @media (min-width: 769px) {

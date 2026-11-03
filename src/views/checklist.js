@@ -177,6 +177,10 @@ export function renderChecklist(
     <div class="app-shell">
       ${renderHeader(user)}
       <main class="app-main app-main--wide">
+        <a class="btn btn--secondary btn--sm back-btn" href="#/" data-link>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Dashboard
+        </a>
         <div class="checklist-toolbar">
           <div>
             <h1>${title}</h1>

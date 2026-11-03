@@ -49,10 +49,11 @@ function section(id, title, rows, uid) {
 export function renderHome(user, { created, shared, loading }) {
   const newBtn = `<button type="button" class="btn btn--primary" data-action="new-list">+ New checklist</button>`;
 
+  const isEmpty = !loading && !created.length && !shared.length;
   let content;
   if (loading) {
     content = homeSkeleton();
-  } else if (!created.length && !shared.length) {
+  } else if (isEmpty) {
     content = `
       <div class="empty-state">
         <div class="empty-state__icon" aria-hidden="true">✓</div>
@@ -76,7 +77,7 @@ export function renderHome(user, { created, shared, loading }) {
             <h1 class="page-title">Your <span class="page-title__accent">checklists</span></h1>
             <p class="page-subtitle">Lists you created and lists shared with you.</p>
           </div>
-          ${newBtn}
+          ${isEmpty ? "" : newBtn}
         </div>
         ${content}
       </main>

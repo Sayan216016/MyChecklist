@@ -127,6 +127,17 @@
   color: var(--color-primary);
 }
 
+.copy-link {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.copy-link input {
+  flex: 1;
+  font-size: 0.8125rem;
+  background: var(--color-bg);
+}
+
 .field__hint {
   margin: 0.375rem 0 0;
   font-size: 0.75rem;

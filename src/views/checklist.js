@@ -1,5 +1,9 @@
-import { escapeHtml, formatWhen } from "../util.js";
-import { renderHeader, avatarHtml } from "./layout.js";
+/**
+ * Checklist page: one column per collaborator, one row per task.
+ * Desktop = full grid; mobile = one column at a time via tabs. Both render the same task cards.
+ */
+import { escapeHtml, formatWhen, memberStripeClass } from "../utils/helpers.js";
+import { renderHeader, avatarHtml } from "../components/layout.js";
 
 function doneMeta(item, currentUid) {
   if (!item.completed || !item.completedByName) return "";
@@ -11,65 +15,75 @@ function doneMeta(item, currentUid) {
   return `<p class="check-item__meta">Done by ${who}${when ? ` · ${when}` : ""}</p>`;
 }
 
-function renderItemCell(item, currentUid, rowNum, memberUid) {
-  if (!item || item.addedBy !== memberUid) {
-    return `<td class="grid-cell grid-cell--empty"></td>`;
+/**
+ * view: { uid, isOwner, editingId, editDraft, poppedId, leavingIds }
+ * ✎ / 🗑 render only for the task's creator or the list owner; everyone else can just tick.
+ */
+function itemCard(item, view, idPrefix) {
+  const cls = [
+    "item-card",
+    memberStripeClass(item.addedBy),
+    item.completed ? "item-card--done" : "",
+    view.leavingIds.has(item.id) ? "item-card--leaving" : "",
+  ].filter(Boolean).join(" ");
+
+  if (view.editingId === item.id) {
+    return `
+      <div class="${cls}">
+        <div class="item-edit">
+          <input type="text" value="${escapeHtml(view.editDraft)}" maxlength="500" aria-label="Edit task text" data-edit-input />
+          <span class="item-edit__hint">Enter to save · Esc to cancel</span>
+        </div>
+      </div>`;
   }
-  const id = `item-${item.id}`;
-  const doneCls = item.completed ? " check-item--done" : "";
+
+  const id = `${idPrefix}-${item.id}`;
+  const canEdit = item.addedBy === view.uid || view.isOwner;
+  const actions = canEdit
+    ? `
+      <div class="item-actions">
+        <button type="button" class="icon-btn" aria-label="Edit task" title="Edit" data-edit-item="${item.id}">✎</button>
+        <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete" data-delete-item="${item.id}">🗑</button>
+      </div>`
+    : "";
+
   return `
-    <td class="grid-cell">
-      <div class="check-item${doneCls}">
+    <div class="${cls}">
+      <div class="check-item${item.completed ? " check-item--done" : ""}">
         <div class="check-item__row">
-          <input class="check-item__input" type="checkbox" id="${id}" data-item-id="${item.id}" ${item.completed ? "checked" : ""} />
+          <input class="check-item__input${view.poppedId === item.id ? " is-fresh" : ""}" type="checkbox" id="${id}" data-item-id="${item.id}" ${item.completed ? "checked" : ""} />
           <label class="check-item__label" for="${id}">${escapeHtml(item.text)}</label>
         </div>
-        ${doneMeta(item, currentUid)}
+        ${doneMeta(item, view.uid)}
       </div>
-    </td>`;
+      ${actions}
+    </div>`;
 }
 
-function renderMobileView(items, members, currentUid, activeMemberUid) {
+function renderMobileView(items, members, view, activeMemberUid, freshIds) {
   const member = members.find((m) => m.uid === activeMemberUid) || members[0];
   if (!member) return "";
 
   const rows = items
-    .map((item, i) => {
-      const owner = members.find((m) => m.uid === item.addedBy);
-      const ownerLabel =
-        item.addedBy === currentUid ? "Your item" : `${owner?.displayName || "Someone"}'s item`;
-      const show = item.addedBy === member.uid;
-      if (!show) return "";
-
-      const id = `m-${item.id}`;
-      const doneCls = item.completed ? " check-item--done" : "";
-      return `
-        <article class="mobile-row-card">
-          <div class="mobile-row-card__index">Row ${i + 1} · ${escapeHtml(ownerLabel)}</div>
-          <div class="check-item${doneCls}">
-            <div class="check-item__row">
-              <input class="check-item__input" type="checkbox" id="${id}" data-item-id="${item.id}" ${item.completed ? "checked" : ""} />
-              <label class="check-item__label" for="${id}">${escapeHtml(item.text)}</label>
-            </div>
-            ${doneMeta(item, currentUid)}
-          </div>
-        </article>`;
-    })
+    .map((item, i) =>
+      item.addedBy === member.uid
+        ? `
+        <article class="mobile-row-card${freshIds.has(item.id) ? " row-enter" : ""}">
+          <div class="mobile-row-card__index">Row ${i + 1}</div>
+          ${itemCard(item, view, "m")}
+        </article>`
+        : "",
+    )
     .join("");
 
-  const addBlock =
-    member.uid === currentUid
-      ? `
-        <div class="add-item-inline" style="margin-top: 0.75rem;">
-          <input type="text" placeholder="Add item in your column…" aria-label="New item" data-mobile-add-input />
-          <button type="button" class="btn btn--primary btn--sm" data-action="add-item-mobile">Add</button>
-        </div>`
+  const addBtn =
+    member.uid === view.uid
+      ? `<button type="button" class="btn btn--secondary btn--sm col-header__add-btn" data-action="add-tasks" style="margin-bottom: 0.75rem;">+ Add tasks</button>`
       : "";
 
   return `
-    <p class="page-subtitle" style="margin-top: 0;">Showing <strong>${member.uid === currentUid ? "your column" : escapeHtml(member.displayName)}</strong>.</p>
-    ${rows || `<p class="page-subtitle">No items in this column yet.</p>`}
-    ${addBlock}`;
+    ${addBtn}
+    ${rows || `<p class="page-subtitle">No tasks in this column yet.</p>`}`;
 }
 
 export function renderChecklist(
@@ -77,9 +91,12 @@ export function renderChecklist(
   list,
   members,
   items,
-  { mobileMemberUid, shareUrl, inviteOpen },
+  { mobileMemberUid, editingId, editDraft, poppedId, leavingIds, freshIds },
 ) {
   const isOwner = list.createdBy === user.uid;
+  const view = { uid: user.uid, isOwner, editingId, editDraft, poppedId, leavingIds };
+  const done = items.filter((i) => i.completed).length;
+  const pct = items.length ? Math.round((done / items.length) * 100) : 0;
   const ownerMeta = isOwner ? "You’re the owner" : "Collaborator";
   const title = escapeHtml(list.title);
 
@@ -107,11 +124,7 @@ export function renderChecklist(
       const isYou = m.uid === user.uid;
       const isListOwner = m.uid === list.createdBy;
       const addRow = isYou
-        ? `
-          <div class="col-header__add add-item-inline">
-            <input type="text" placeholder="Add item…" aria-label="Add item in your column" data-add-input="${m.uid}" />
-            <button type="button" class="btn btn--primary btn--sm" data-action="add-item" data-member="${m.uid}">Add</button>
-          </div>`
+        ? `<button type="button" class="btn btn--secondary btn--sm col-header__add-btn" data-action="add-tasks">+ Add tasks</button>`
         : "";
       const badge = isListOwner ? `<span class="col-header__badge">Owner</span>` : "";
       return `
@@ -130,9 +143,15 @@ export function renderChecklist(
 
   const bodyRows = items
     .map((item, index) => {
-      const cells = members.map((m) => renderItemCell(item, user.uid, index + 1, m.uid)).join("");
+      const cells = members
+        .map((m) =>
+          item.addedBy === m.uid
+            ? `<td class="grid-cell">${itemCard(item, view, "d")}</td>`
+            : `<td class="grid-cell grid-cell--empty"></td>`,
+        )
+        .join("");
       return `
-        <tr>
+        <tr${freshIds.has(item.id) ? ' class="row-enter"' : ""}>
           <td class="col-index">${index + 1}</td>
           ${cells}
         </tr>`;
@@ -154,8 +173,6 @@ export function renderChecklist(
       <button type="button" class="btn btn--danger btn--sm" data-action="delete-list">Delete list</button>`
     : "";
 
-  const modalCls = inviteOpen ? "modal-backdrop is-open" : "modal-backdrop";
-
   return `
     <div class="app-shell">
       ${renderHeader(user)}
@@ -163,7 +180,8 @@ export function renderChecklist(
         <div class="checklist-toolbar">
           <div>
             <h1>${title}</h1>
-            <p class="checklist-toolbar__meta">${ownerMeta} · ${members.length} collaborator${members.length === 1 ? "" : "s"} · Live updates</p>
+            <p class="checklist-toolbar__meta">${ownerMeta} · ${members.length} collaborator${members.length === 1 ? "" : "s"} · ${done} / ${items.length} done</p>
+            <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: ${pct}%"></span></div>
           </div>
           <div class="checklist-toolbar__actions">${ownerActions}</div>
         </div>
@@ -178,7 +196,7 @@ export function renderChecklist(
         </div>
 
         <div class="mobile-list mobile-only">
-          ${renderMobileView(items, members, user.uid, mobileMemberUid)}
+          ${renderMobileView(items, members, view, mobileMemberUid, freshIds)}
         </div>
 
         <div class="grid-scroll grid-scroll--desktop">
@@ -193,32 +211,5 @@ export function renderChecklist(
           </table>
         </div>
       </main>
-    </div>
-
-    <div class="${modalCls}" id="invite-modal" role="dialog" aria-labelledby="invite-title" aria-modal="true" ${inviteOpen ? "" : "hidden"}>
-      <div class="modal">
-        <div class="modal__header">
-          <h2 id="invite-title">Invite collaborators</h2>
-          <p>They’ll see this list after signing in with the invited Gmail address.</p>
-        </div>
-        <div class="modal__body">
-          <div class="field">
-            <label for="invite-email">Email address</label>
-            <input id="invite-email" type="email" placeholder="friend@gmail.com" data-invite-email />
-            <p class="field__hint">Must match their Google account email.</p>
-          </div>
-          <div class="field">
-            <label for="invite-link">Share link</label>
-            <div class="copy-link">
-              <input id="invite-link" type="text" readonly value="${escapeHtml(shareUrl)}" />
-              <button type="button" class="btn btn--secondary btn--sm" data-action="copy-link">Copy</button>
-            </div>
-          </div>
-        </div>
-        <div class="modal__footer">
-          <button type="button" class="btn btn--ghost" data-action="close-invite">Cancel</button>
-          <button type="button" class="btn btn--primary" data-action="send-invite">Send invite</button>
-        </div>
-      </div>
     </div>`;
 }

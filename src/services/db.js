@@ -1,11 +1,11 @@
 import {
-  addDoc,
   arrayRemove,
   arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDoc,
+  getCountFromServer,
   getDocs,
   onSnapshot,
   orderBy,
@@ -15,8 +15,8 @@ import {
   where,
   writeBatch,
 } from "firebase/firestore";
-import { db } from "./firebase.js";
-import { normalizeEmail } from "./util.js";
+import { db } from "../config/firebase.js";
+import { normalizeEmail } from "../utils/helpers.js";
 
 export async function claimPendingInvites(user) {
   const email = normalizeEmail(user.email || "");
@@ -70,6 +70,7 @@ export async function createChecklist(user, title) {
   batch.set(listRef, {
     title: trimmed,
     createdBy: user.uid,
+    createdByName: user.displayName || user.email,
     memberIds: [user.uid],
     invitedEmails: [],
     createdAt: serverTimestamp(),
@@ -106,23 +107,26 @@ export function subscribeItems(listId, callback) {
   return onSnapshot(q, callback);
 }
 
-export async function addItem(listId, user, text) {
-  const trimmed = text.trim();
-  if (!trimmed) return;
-
-  await addDoc(collection(db, "checklists", listId, "items"), {
-    text: trimmed,
-    addedBy: user.uid,
-    sortOrder: Date.now(),
-    createdAt: serverTimestamp(),
-    completed: false,
-    completedBy: null,
-    completedByName: null,
-    completedAt: null,
+/** Adds several tasks (already trimmed, non-empty) in one batch, keeping their order. */
+export async function addItems(listId, user, texts) {
+  if (!texts.length) return;
+  const listRef = doc(db, "checklists", listId);
+  const batch = writeBatch(db);
+  const now = Date.now();
+  texts.forEach((text, i) => {
+    batch.set(doc(collection(listRef, "items")), {
+      text,
+      addedBy: user.uid,
+      sortOrder: now + i,
+      createdAt: serverTimestamp(),
+      completed: false,
+      completedBy: null,
+      completedByName: null,
+      completedAt: null,
+    });
   });
-  await updateDoc(doc(db, "checklists", listId), {
-    updatedAt: serverTimestamp(),
-  });
+  batch.update(listRef, { updatedAt: serverTimestamp() });
+  await batch.commit();
 }
 
 export async function toggleItemComplete(listId, item, user, completed) {
@@ -145,6 +149,41 @@ export async function toggleItemComplete(listId, item, user, completed) {
   await updateDoc(doc(db, "checklists", listId), {
     updatedAt: serverTimestamp(),
   });
+}
+
+/** Allowed by rules only for the task's creator or the list owner. */
+export async function updateItemText(listId, itemId, text) {
+  const trimmed = text.trim();
+  if (!trimmed) throw new Error("Task can't be empty");
+  await updateDoc(doc(db, "checklists", listId, "items", itemId), { text: trimmed });
+}
+
+export async function deleteItem(listId, itemId) {
+  await deleteDoc(doc(db, "checklists", listId, "items", itemId));
+}
+
+/**
+ * Home-card details: owner name/photo and "done / total" counts.
+ * Counts use aggregation queries (1 read per 1000 items), so old lists need no stored counters.
+ */
+export async function getListSummary(list) {
+  const items = collection(db, "checklists", list.id, "items");
+  const [total, done, owner] = await Promise.all([
+    getCountFromServer(items),
+    getCountFromServer(query(items, where("completed", "==", true))),
+    list.createdByName ? null : getDoc(doc(db, "checklists", list.id, "members", list.createdBy)),
+  ]);
+  const ownerData = owner?.data();
+  return {
+    total: total.data().count,
+    done: done.data().count,
+    owner: {
+      uid: list.createdBy,
+      displayName: list.createdByName || ownerData?.displayName || "Owner",
+      email: ownerData?.email || "",
+      photoURL: ownerData?.photoURL || null,
+    },
+  };
 }
 
 export async function inviteByEmail(listId, email) {

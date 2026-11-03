@@ -1,0 +1,30 @@
+/*
+ * Stylesheet entry, imported once from src/main.js. Vite inlines the @imports.
+ * Order matters: tokens → base → layout → components → pages → responsive overrides.
+ */
+
+@import "./base/tokens.css";
+@import "./base/theme-dark.css";
+@import "./base/reset.css";
+@import "./base/typography.css";
+@import "./base/motion.css";
+
+@import "./layout/app-shell.css";
+
+@import "./components/buttons.css";
+@import "./components/avatar.css";
+@import "./components/theme-toggle.css";
+@import "./components/modal.css";
+@import "./components/toast.css";
+@import "./components/progress.css";
+@import "./components/skeleton.css";
+@import "./components/empty-state.css";
+
+@import "./pages/signin.css";
+@import "./pages/home.css";
+@import "./pages/checklist.css";
+
+/* after pages/checklist.css: overrides its base .check-item rules */
+@import "./components/item-card.css";
+
+@import "./layout/responsive.css";

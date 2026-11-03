@@ -1,4 +1,5 @@
-import { escapeHtml, initials, memberColorClass } from "../util.js";
+import { escapeHtml, initials, memberColorClass } from "../utils/helpers.js";
+import { themeToggleHtml } from "../utils/theme.js";
 
 export function renderHeader(user, { showSignOut = true } = {}) {
   const name = escapeHtml(user.displayName || user.email || "User");
@@ -14,6 +15,7 @@ export function renderHeader(user, { showSignOut = true } = {}) {
         MyChecklist
       </a>
       <div class="app-header__actions">
+        ${themeToggleHtml()}
         <div class="user-chip">
           ${
             user.photoURL

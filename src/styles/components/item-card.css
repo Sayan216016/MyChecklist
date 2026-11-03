@@ -1,0 +1,138 @@
+/*
+ * Task card: left stripe in the adder's colour (member-color-N), green when done.
+ * ✎ / 🗑 render only for the task's creator and the list owner.
+ */
+
+.item-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.625rem 0.625rem 0.625rem 0.75rem;
+  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--member-color, var(--color-primary));
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s var(--ease-out), background 0.2s, opacity 0.2s;
+}
+
+.item-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.item-card .check-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-card--done {
+  background: var(--color-done-soft);
+  border-left-color: var(--color-done);
+}
+
+.member-color-2 { --member-color: #7c3aed; }
+.member-color-3 { --member-color: #db2777; }
+.member-color-4 { --member-color: #059669; }
+
+.item-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+/* ——— Inline edit ——— */
+
+.item-edit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.item-edit input {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  outline: 2px solid var(--color-primary-soft);
+}
+
+.item-edit__hint {
+  font-size: 0.6875rem;
+  color: var(--color-text-subtle);
+}
+
+/* ——— Custom checkbox: pop on check, strike-through sweeps in ——— */
+
+.check-item__input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: 5px;
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s var(--ease-out);
+}
+
+.check-item__input::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  margin-top: -2px;
+  transition: transform 0.18s var(--ease-out);
+}
+
+.check-item__input:checked {
+  background: var(--color-done);
+  border-color: var(--color-done);
+  animation: pop 0.25s var(--ease-out);
+}
+
+.check-item__input:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.check-item__input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@keyframes pop {
+  50% { transform: scale(1.18); }
+}
+
+.check-item__label {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 55% / 0 1px;
+  transition: background-size 0.25s var(--ease-out), color 0.2s;
+}
+
+.check-item--done .check-item__label {
+  text-decoration: none;
+  background-size: 100% 1px;
+}
+
+/* #app re-renders on every live update; once settled (set in main.js) only fresh things animate */
+[data-settled] .app-main,
+[data-settled] .list-card,
+[data-settled] .check-item__input:checked:not(.is-fresh) { animation: none; }
+
+.check-item--done .is-fresh + .check-item__label { animation: sweep 0.25s var(--ease-out); }
+@keyframes sweep { from { background-size: 0 1px; } }
+
+/* ——— New row slides in; deleted row fades while Undo is offered ——— */
+
+.row-enter { animation: fade-up 0.3s var(--ease-out) both; }
+.row-enter .item-card { background: var(--color-primary-soft); }
+.item-card--leaving { opacity: 0.35; pointer-events: none; }

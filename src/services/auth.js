@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-import { auth, googleProvider } from "./firebase.js";
+import { auth, googleProvider } from "../config/firebase.js";
 import { claimPendingInvites } from "./db.js";
 
 export function watchAuth(callback) {

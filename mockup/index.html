@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MyChecklist — Sign in (mockup)</title>
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/polish.css" />
 </head>
 <body>
   <div class="mock-banner">
@@ -13,28 +15,94 @@
     <a href="checklist.html">Checklist</a>
   </div>
 
-  <main class="signin-page">
-    <div class="signin-card">
-      <div class="signin-card__logo" aria-hidden="true">✓</div>
-      <h1>MyChecklist</h1>
-      <p>Shared checklists with your people. Sign in with Google to see lists shared with you.</p>
+  <main class="signin-page signin-page--hero">
+    <span class="blob blob--1" aria-hidden="true"></span>
+    <span class="blob blob--2" aria-hidden="true"></span>
 
-      <a class="btn btn--google" href="home.html">
-        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.59 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Continue with Google
-      </a>
+    <button type="button" class="theme-toggle signin-page__theme" data-theme-toggle aria-label="Switch to dark theme"></button>
 
-      <p class="signin-card__note">Only Google accounts on a list’s invite can open it.</p>
+    <section class="signin-hero">
+      <div class="signin-hero__copy">
+        <div class="signin-card__logo" aria-hidden="true">✓</div>
+        <h1>Tick things off, <span class="text-gradient">together.</span></h1>
+        <p>Make checklists, share them with your people, and watch tasks get done in real time. Free with your Google account.</p>
 
-      <nav class="mock-nav" aria-label="Mockup screens">
-        Preview: <a href="home.html">Home</a> · <a href="checklist.html">Checklist grid</a>
-      </nav>
-    </div>
+        <a class="btn btn--google" href="home.html">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.59 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          Continue with Google
+        </a>
+
+        <ul class="signin-hero__points">
+          <li>👥 One column per person</li>
+          <li>⚡ Live updates</li>
+          <li>🔒 Private by invite</li>
+        </ul>
+
+        <nav class="mock-nav" aria-label="Mockup screens">
+          Preview: <a href="home.html">Home</a> · <a href="checklist.html">Checklist grid</a>
+        </nav>
+      </div>
+
+      <!-- Hand-drawn inline SVG: animated shared checklist (no external image licence needed) -->
+      <svg class="hero-art" viewBox="0 0 420 380" role="img" aria-label="Illustration of friends ticking off a shared checklist">
+        <ellipse cx="210" cy="350" rx="150" ry="14" class="hero-art__shadow" />
+
+        <g class="hero-art__board">
+          <rect x="70" y="40" width="280" height="290" rx="22" class="hero-art__card" />
+          <rect x="70" y="40" width="280" height="56" rx="22" class="hero-art__head" />
+          <rect x="70" y="74" width="280" height="22" class="hero-art__head" />
+          <rect x="96" y="60" width="120" height="14" rx="7" class="hero-art__title" />
+
+          <g class="hero-art__row hero-art__row--1">
+            <rect x="96" y="120" width="26" height="26" rx="7" class="hero-art__box" />
+            <path d="M102 133 l6 6 l11 -12" class="hero-art__tick" />
+            <rect x="136" y="126" width="150" height="12" rx="6" class="hero-art__line" />
+            <circle cx="314" cy="133" r="12" fill="#7c3aed" />
+          </g>
+          <g class="hero-art__row hero-art__row--2">
+            <rect x="96" y="170" width="26" height="26" rx="7" class="hero-art__box" />
+            <path d="M102 183 l6 6 l11 -12" class="hero-art__tick" />
+            <rect x="136" y="176" width="120" height="12" rx="6" class="hero-art__line" />
+            <circle cx="314" cy="183" r="12" fill="#db2777" />
+          </g>
+          <g class="hero-art__row hero-art__row--3">
+            <rect x="96" y="220" width="26" height="26" rx="7" class="hero-art__box" />
+            <path d="M102 233 l6 6 l11 -12" class="hero-art__tick" />
+            <rect x="136" y="226" width="160" height="12" rx="6" class="hero-art__line" />
+            <circle cx="314" cy="233" r="12" fill="#059669" />
+          </g>
+          <g class="hero-art__row">
+            <rect x="96" y="270" width="26" height="26" rx="7" class="hero-art__box hero-art__box--empty" />
+            <rect x="136" y="276" width="100" height="12" rx="6" class="hero-art__line" />
+            <circle cx="314" cy="283" r="12" fill="#2563eb" />
+          </g>
+        </g>
+
+        <g class="hero-art__float hero-art__float--a">
+          <circle cx="42" cy="110" r="24" fill="#7c3aed" />
+          <text x="42" y="116" text-anchor="middle" class="hero-art__initials">AK</text>
+        </g>
+        <g class="hero-art__float hero-art__float--b">
+          <circle cx="384" cy="70" r="20" fill="#db2777" />
+          <text x="384" y="76" text-anchor="middle" class="hero-art__initials">PS</text>
+        </g>
+        <g class="hero-art__float hero-art__float--c">
+          <circle cx="380" cy="270" r="22" fill="#059669" />
+          <text x="380" y="276" text-anchor="middle" class="hero-art__initials">NM</text>
+        </g>
+
+        <circle cx="40" cy="250" r="5" class="hero-art__spark" />
+        <circle cx="400" cy="170" r="4" class="hero-art__spark hero-art__spark--late" />
+        <circle cx="60" cy="40" r="3" class="hero-art__spark hero-art__spark--late" />
+      </svg>
+    </section>
+
+    <p class="signin-card__note signin-hero__footnote">Your lists stay private — only people you invite can see them.</p>
   </main>
 </body>
 </html>

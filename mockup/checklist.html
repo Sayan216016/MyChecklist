@@ -4,13 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goa trip — MyChecklist (mockup)</title>
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/polish.css" />
 </head>
 <body>
   <div class="mock-banner">
     UI mockup —
     <a href="index.html">Sign in</a> ·
-    <a href="home.html">Home</a>
+    <a href="home.html">Home</a> ·
+    <a href="#add-modal">Add tasks popup</a> ·
+    <a href="#invite-modal">Invite popup</a>
   </div>
 
   <div class="app-shell">
@@ -20,6 +24,7 @@
         MyChecklist
       </a>
       <div class="app-header__actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark theme"></button>
         <div class="user-chip">
           <span class="avatar avatar--initials avatar--sm" aria-hidden="true">RK</span>
           <span>Rahul K.</span>
@@ -31,7 +36,8 @@
       <div class="checklist-toolbar">
         <div>
           <h1>Goa trip — March 2026</h1>
-          <p class="checklist-toolbar__meta">You’re the owner · 4 collaborators · Live updates when connected</p>
+          <p class="checklist-toolbar__meta">You’re the owner · 4 collaborators · 3 / 6 done</p>
+          <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: 50%"></span></div>
         </div>
         <div class="checklist-toolbar__actions">
           <a class="btn btn--secondary btn--sm" href="#invite-modal">Invite</a>
@@ -59,7 +65,9 @@
         </span>
       </div>
 
-      <!-- Mobile: one column at a time (static mock shows "You" column) -->
+      <p class="mock-label">Viewing as list owner: ✎ and 🗑 on every card. A collaborator sees them only on cards they added; on other cards they can just tick.</p>
+
+      <!-- Mobile: one column at a time -->
       <div class="mobile-tabs mobile-only" role="tablist" aria-label="Collaborator columns">
         <button type="button" class="mobile-tabs__tab mobile-tabs__tab--active" role="tab" aria-selected="true">You</button>
         <button type="button" class="mobile-tabs__tab" role="tab">Amit</button>
@@ -68,42 +76,40 @@
       </div>
 
       <div class="mobile-list mobile-only">
-        <p class="page-subtitle" style="margin-top: 0;">Showing <strong>your column</strong> — each row is one item someone added.</p>
+        <a class="btn btn--secondary btn--sm col-header__add-btn" href="#add-modal" style="margin-bottom: 0.75rem;">+ Add tasks</a>
         <article class="mobile-row-card">
-          <div class="mobile-row-card__index">Row 1 · Your item</div>
-          <div class="check-item">
-            <div class="check-item__row">
-              <input class="check-item__input" type="checkbox" id="m1" />
-              <label class="check-item__label" for="m1">Book flights (DEL → GOI)</label>
+          <div class="mobile-row-card__index">Row 1</div>
+          <div class="item-card">
+            <div class="check-item">
+              <div class="check-item__row">
+                <input class="check-item__input" type="checkbox" id="m1" />
+                <label class="check-item__label" for="m1">Book flights (DEL → GOI)</label>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="icon-btn" aria-label="Edit task">✎</button>
+              <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task">🗑</button>
             </div>
           </div>
         </article>
         <article class="mobile-row-card">
-          <div class="mobile-row-card__index">Row 2 · Priya’s item (you can check it)</div>
-          <div class="check-item check-item--done">
-            <div class="check-item__row">
-              <input class="check-item__input" type="checkbox" id="m2" checked />
-              <label class="check-item__label" for="m2">Airbnb deposit</label>
+          <div class="mobile-row-card__index">Row 5</div>
+          <div class="item-card">
+            <div class="check-item">
+              <div class="check-item__row">
+                <input class="check-item__input" type="checkbox" id="m5" />
+                <label class="check-item__label" for="m5">Travel insurance</label>
+              </div>
             </div>
-            <p class="check-item__meta">Done by you · Today 2:14 PM</p>
-          </div>
-        </article>
-        <article class="mobile-row-card">
-          <div class="mobile-row-card__index">Row 3 · Your item</div>
-          <div class="check-item">
-            <div class="check-item__row">
-              <input class="check-item__input" type="checkbox" id="m3" />
-              <label class="check-item__label" for="m3">Travel insurance</label>
+            <div class="item-actions">
+              <button type="button" class="icon-btn" aria-label="Edit task">✎</button>
+              <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task">🗑</button>
             </div>
           </div>
         </article>
-        <div class="add-item-inline" style="margin-top: 0.75rem;">
-          <input type="text" placeholder="Add item in your column…" aria-label="New item" />
-          <button type="button" class="btn btn--primary btn--sm">Add</button>
-        </div>
       </div>
 
-      <!-- Desktop: full column grid -->
+      <!-- Desktop: column grid of cards -->
       <div class="grid-scroll grid-scroll--desktop">
         <table class="checklist-grid" role="grid" aria-label="Collaborative checklist">
           <thead>
@@ -115,36 +121,27 @@
                     <span class="avatar avatar--initials avatar--lg" aria-hidden="true">RK</span>
                     <span class="col-header__name">You</span>
                     <span class="col-header__badge">Owner</span>
-                    <div class="col-header__add add-item-inline">
-                      <input type="text" placeholder="Add item…" aria-label="Add item in your column" />
-                      <button type="button" class="btn btn--primary btn--sm">Add</button>
-                    </div>
+                    <a class="btn btn--secondary btn--sm col-header__add-btn" href="#add-modal">+ Add tasks</a>
                   </div>
                 </div>
               </th>
               <th class="col-member" scope="col">
-                <div class="col-header">
-                  <div class="col-header__inner">
-                    <span class="avatar avatar--initials avatar--lg avatar--color-2" aria-hidden="true">AK</span>
-                    <span class="col-header__name">Amit K.</span>
-                  </div>
-                </div>
+                <div class="col-header"><div class="col-header__inner">
+                  <span class="avatar avatar--initials avatar--lg avatar--color-2" aria-hidden="true">AK</span>
+                  <span class="col-header__name">Amit K.</span>
+                </div></div>
               </th>
               <th class="col-member" scope="col">
-                <div class="col-header">
-                  <div class="col-header__inner">
-                    <span class="avatar avatar--initials avatar--lg avatar--color-3" aria-hidden="true">PS</span>
-                    <span class="col-header__name">Priya S.</span>
-                  </div>
-                </div>
+                <div class="col-header"><div class="col-header__inner">
+                  <span class="avatar avatar--initials avatar--lg avatar--color-3" aria-hidden="true">PS</span>
+                  <span class="col-header__name">Priya S.</span>
+                </div></div>
               </th>
               <th class="col-member" scope="col">
-                <div class="col-header">
-                  <div class="col-header__inner">
-                    <span class="avatar avatar--initials avatar--lg avatar--color-4" aria-hidden="true">NM</span>
-                    <span class="col-header__name">Neha M.</span>
-                  </div>
-                </div>
+                <div class="col-header"><div class="col-header__inner">
+                  <span class="avatar avatar--initials avatar--lg avatar--color-4" aria-hidden="true">NM</span>
+                  <span class="col-header__name">Neha M.</span>
+                </div></div>
               </th>
             </tr>
           </thead>
@@ -152,10 +149,16 @@
             <tr>
               <td class="col-index">1</td>
               <td class="grid-cell">
-                <div class="check-item">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r1-you" />
-                    <label class="check-item__label" for="r1-you">Book flights (DEL → GOI)</label>
+                <div class="item-card">
+                  <div class="check-item">
+                    <div class="check-item__row">
+                      <input class="check-item__input" type="checkbox" id="r1" />
+                      <label class="check-item__label" for="r1">Book flights (DEL → GOI)</label>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn" aria-label="Edit task" title="Edit">✎</button>
+                    <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete">🗑</button>
                   </div>
                 </div>
               </td>
@@ -167,10 +170,16 @@
               <td class="col-index">2</td>
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell">
-                <div class="check-item">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r2-amit" />
-                    <label class="check-item__label" for="r2-amit">Car rental pickup</label>
+                <div class="item-card member-color-2">
+                  <div class="check-item">
+                    <div class="check-item__row">
+                      <input class="check-item__input" type="checkbox" id="r2" />
+                      <label class="check-item__label" for="r2">Car rental pickup</label>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn" aria-label="Edit task" title="Edit">✎</button>
+                    <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete">🗑</button>
                   </div>
                 </div>
               </td>
@@ -182,12 +191,18 @@
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell">
-                <div class="check-item check-item--done">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r3-priya" checked />
-                    <label class="check-item__label" for="r3-priya">Airbnb deposit</label>
+                <div class="item-card item-card--done member-color-3">
+                  <div class="check-item check-item--done">
+                    <div class="check-item__row">
+                      <input class="check-item__input" type="checkbox" id="r3" checked />
+                      <label class="check-item__label" for="r3">Airbnb deposit</label>
+                    </div>
+                    <p class="check-item__meta">Done by Rahul (you) · Today 2:14 PM</p>
                   </div>
-                  <p class="check-item__meta">Done by Rahul (you) · Today 2:14 PM</p>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn" aria-label="Edit task" title="Edit">✎</button>
+                    <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete">🗑</button>
+                  </div>
                 </div>
               </td>
               <td class="grid-cell grid-cell--empty"></td>
@@ -198,10 +213,16 @@
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell">
-                <div class="check-item">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r4-neha" />
-                    <label class="check-item__label" for="r4-neha">Beach gear &amp; sunscreen</label>
+                <div class="item-card member-color-4">
+                  <div class="check-item">
+                    <div class="check-item__row">
+                      <input class="check-item__input" type="checkbox" id="r4" />
+                      <label class="check-item__label" for="r4">Beach gear &amp; sunscreen</label>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn" aria-label="Edit task" title="Edit">✎</button>
+                    <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete">🗑</button>
                   </div>
                 </div>
               </td>
@@ -209,35 +230,33 @@
             <tr>
               <td class="col-index">5</td>
               <td class="grid-cell">
-                <div class="check-item">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r5-you" />
-                    <label class="check-item__label" for="r5-you">Travel insurance</label>
+                <div class="item-card">
+                  <div class="item-edit" style="flex: 1;">
+                    <input type="text" value="Travel insurance (family plan)" aria-label="Edit task text" />
+                    <span class="item-edit__hint">Enter to save · Esc to cancel</span>
                   </div>
                 </div>
               </td>
               <td class="grid-cell grid-cell--empty"></td>
-              <td class="grid-cell">
-                <div class="check-item check-item--done">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r5-priya" checked />
-                    <label class="check-item__label" for="r5-priya">Restaurant shortlist</label>
-                  </div>
-                  <p class="check-item__meta">Done by Amit · Yesterday</p>
-                </div>
-              </td>
+              <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell grid-cell--empty"></td>
             </tr>
-            <tr>
+            <tr class="row-enter">
               <td class="col-index">6</td>
               <td class="grid-cell grid-cell--empty"></td>
               <td class="grid-cell">
-                <div class="check-item check-item--done">
-                  <div class="check-item__row">
-                    <input class="check-item__input" type="checkbox" id="r6-amit" checked />
-                    <label class="check-item__label" for="r6-amit">Offline maps download</label>
+                <div class="item-card item-card--done member-color-2">
+                  <div class="check-item check-item--done">
+                    <div class="check-item__row">
+                      <input class="check-item__input" type="checkbox" id="r6" checked />
+                      <label class="check-item__label" for="r6">Offline maps download</label>
+                    </div>
+                    <p class="check-item__meta">Done by Amit · Yesterday</p>
                   </div>
-                  <p class="check-item__meta">Done by Amit · Yesterday</p>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn" aria-label="Edit task" title="Edit">✎</button>
+                    <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete task" title="Delete">🗑</button>
+                  </div>
                 </div>
               </td>
               <td class="grid-cell grid-cell--empty"></td>
@@ -247,16 +266,73 @@
         </table>
       </div>
 
-      <p class="page-subtitle" style="margin-top: 1rem; max-width: 52rem;">
-        <strong>Grid rules (mockup):</strong> each collaborator has a column; each new item creates a new row with text in that person’s cell only.
-        Anyone can check any box; “Done by …” shows who completed it.
-      </p>
+      <section style="margin-top: 1.5rem;" aria-label="Loading state preview">
+        <span class="mock-label">Loading state (skeleton) — shown while the list loads</span>
+        <div class="mobile-only skeleton-mobile" aria-busy="true">
+          <div class="skeleton-mobile__tabs">
+            <span class="skeleton skeleton--tab"></span>
+            <span class="skeleton skeleton--tab"></span>
+            <span class="skeleton skeleton--tab"></span>
+          </div>
+          <span class="skeleton skeleton--button"></span>
+          <div class="item-card"><span class="skeleton skeleton--box"></span><span class="skeleton skeleton--cell"></span></div>
+          <div class="item-card"><span class="skeleton skeleton--box"></span><span class="skeleton skeleton--cell" style="width: 55%"></span></div>
+          <div class="item-card"><span class="skeleton skeleton--box"></span><span class="skeleton skeleton--cell" style="width: 70%"></span></div>
+        </div>
+        <div class="grid-scroll grid-scroll--desktop" aria-busy="true">
+          <table class="checklist-grid">
+            <thead>
+              <tr>
+                <th class="col-index"></th>
+                <th class="col-member"><div class="col-header"><span class="skeleton skeleton--avatar"></span><span class="skeleton skeleton--name"></span></div></th>
+                <th class="col-member"><div class="col-header"><span class="skeleton skeleton--avatar"></span><span class="skeleton skeleton--name"></span></div></th>
+                <th class="col-member"><div class="col-header"><span class="skeleton skeleton--avatar"></span><span class="skeleton skeleton--name"></span></div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="col-index"></td><td class="grid-cell"><div class="item-card"><span class="skeleton skeleton--cell"></span></div></td><td class="grid-cell grid-cell--empty"></td><td class="grid-cell grid-cell--empty"></td></tr>
+              <tr><td class="col-index"></td><td class="grid-cell grid-cell--empty"></td><td class="grid-cell"><div class="item-card"><span class="skeleton skeleton--cell" style="width: 60%"></span></div></td><td class="grid-cell grid-cell--empty"></td></tr>
+              <tr><td class="col-index"></td><td class="grid-cell grid-cell--empty"></td><td class="grid-cell grid-cell--empty"></td><td class="grid-cell"><div class="item-card"><span class="skeleton skeleton--cell" style="width: 70%"></span></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="toast" role="status">
+        Task deleted
+        <button type="button" class="toast__action">Undo</button>
+      </div>
     </main>
   </div>
 
-  <!-- Invite modal (visible for mockup — remove .modal-backdrop fixed in prod or toggle with JS) -->
+  <!-- Add tasks popup: one task per line -->
+  <div class="modal-backdrop" id="add-modal" role="dialog" aria-labelledby="add-title" aria-modal="true">
+    <div class="modal modal--wide">
+      <a class="icon-btn modal__close" href="#" aria-label="Close">✕</a>
+      <div class="modal__header">
+        <h2 id="add-title">Add tasks</h2>
+        <p>Each line becomes a new task in your column.</p>
+      </div>
+      <div class="modal__body">
+        <div class="field">
+          <label for="add-tasks">Tasks <span class="field__count">3 tasks</span></label>
+          <textarea id="add-tasks" placeholder="Book flights&#10;Pack sunscreen&#10;Download offline maps">Book cab to airport
+Exchange currency
+Charge power banks</textarea>
+          <p class="field__hint">Blank lines are skipped · Ctrl + Enter to add</p>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <a class="btn btn--ghost" href="#">Cancel</a>
+        <button type="button" class="btn btn--primary">Add 3 tasks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invite popup -->
   <div class="modal-backdrop" id="invite-modal" role="dialog" aria-labelledby="invite-title" aria-modal="true">
     <div class="modal">
+      <a class="icon-btn modal__close" href="#" aria-label="Close">✕</a>
       <div class="modal__header">
         <h2 id="invite-title">Invite collaborators</h2>
         <p>They’ll see this list after signing in with the invited Gmail address.</p>
@@ -268,18 +344,27 @@
           <p class="field__hint">Must match their Google account email.</p>
         </div>
         <div class="field">
-          <label for="invite-link">Or share link (invited emails only)</label>
+          <label for="invite-link">Share link</label>
           <div class="copy-link">
-            <input id="invite-link" type="text" readonly value="https://you.github.io/MyChecklist/list/goa-2026?invite=…" />
+            <input id="invite-link" type="text" readonly value="https://you.github.io/MyChecklist/#/list/goa-2026" />
             <button type="button" class="btn btn--secondary btn--sm">Copy</button>
           </div>
+          <p class="field__hint">Opens only for people you’ve invited above.</p>
         </div>
       </div>
       <div class="modal__footer">
-        <a class="btn btn--ghost" href="checklist.html">Cancel</a>
+        <a class="btn btn--ghost" href="#">Cancel</a>
         <button type="button" class="btn btn--primary">Send invite</button>
       </div>
     </div>
   </div>
+
+  <script>
+    // mockup only: close popups on backdrop click or Escape
+    document.querySelectorAll(".modal-backdrop").forEach((backdrop) =>
+      backdrop.addEventListener("click", (e) => { if (e.target === backdrop) location.hash = ""; })
+    );
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") location.hash = ""; });
+  </script>
 </body>
 </html>

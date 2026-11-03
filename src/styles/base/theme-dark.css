@@ -1,0 +1,32 @@
+/*
+ * Dark theme: overrides tokens.css when <html data-theme="dark">.
+ * The attribute is set in index.html <head> before paint; toggled by src/utils/theme.js.
+ */
+
+[data-theme="dark"] {
+  --color-bg: #0f1117;
+  --color-surface: #181b23;
+  --color-border: #2a2f3a;
+  --color-border-strong: #3a4150;
+  --color-text: #e6e8ee;
+  --color-text-muted: #a3aab8;
+  --color-text-subtle: #737b8c;
+  --color-primary: #5b8cff;
+  --color-primary-hover: #7aa2ff;
+  --color-primary-soft: rgba(91, 140, 255, 0.14);
+  --color-danger: #f87171;
+  --color-danger-soft: rgba(248, 113, 113, 0.12);
+  --color-done: #34d399;
+  --color-done-soft: rgba(52, 211, 153, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55);
+  --skeleton-a: #20242e;
+  --skeleton-b: #2a2f3b;
+  --toast-bg: #2a2f3b;
+  --backdrop: rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+[data-theme="dark"] .btn--danger { border-color: rgba(248, 113, 113, 0.35); }
+[data-theme="dark"] .btn--danger:hover { background: rgba(248, 113, 113, 0.2); }

@@ -1,0 +1,30 @@
+/* ——— Responsive ——— */
+
+@media (max-width: 768px) {
+  .checklist-toolbar h1 {
+    font-size: 1.125rem;
+  }
+
+  .grid-scroll--desktop {
+    display: none;
+  }
+
+  .mobile-tabs {
+    display: flex;
+  }
+
+  .mobile-list {
+    display: block;
+  }
+
+  .list-card__chevron {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+

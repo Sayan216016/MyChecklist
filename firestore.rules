@@ -67,10 +67,15 @@ service cloud.firestore {
           && request.resource.data.text.size() <= 500
           && request.resource.data.completed == false;
 
+        // any member can check/uncheck; only the task's creator or the list owner can edit its text
         allow update: if isMember(listId)
           && request.resource.data.addedBy == resource.data.addedBy
-          && request.resource.data.text == resource.data.text
-          && request.resource.data.sortOrder == resource.data.sortOrder;
+          && request.resource.data.sortOrder == resource.data.sortOrder
+          && (request.resource.data.text == resource.data.text
+            || ((resource.data.addedBy == request.auth.uid || isOwner(listId))
+              && request.resource.data.text is string
+              && request.resource.data.text.size() > 0
+              && request.resource.data.text.size() <= 500));
 
         allow delete: if isMember(listId)
           && (resource.data.addedBy == request.auth.uid || isOwner(listId));

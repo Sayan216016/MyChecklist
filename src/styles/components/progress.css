@@ -1,0 +1,18 @@
+/* ——— "x / y done" bar (list header + home cards) ——— */
+
+.progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+  margin-top: 0.5rem;
+  max-width: 220px;
+}
+
+.progress__bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-done), #22d3ee);
+  border-radius: inherit;
+  transition: width 0.4s var(--ease-out);
+}

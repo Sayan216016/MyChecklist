@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MyChecklist — Home (mockup)</title>
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/polish.css" />
 </head>
 <body>
   <div class="mock-banner">
@@ -20,6 +22,7 @@
         MyChecklist
       </a>
       <div class="app-header__actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark theme"></button>
         <div class="user-chip">
           <span class="avatar avatar--initials avatar--sm" aria-hidden="true">RK</span>
           <span>Rahul K.</span>
@@ -31,10 +34,10 @@
     <main class="app-main">
       <div class="home-toolbar">
         <div>
-          <h1 class="page-title">Your checklists</h1>
+          <h1 class="page-title">Your <span class="page-title__accent">checklists</span></h1>
           <p class="page-subtitle">Lists you created and lists shared with you.</p>
         </div>
-        <button type="button" class="btn btn--primary">+ New checklist</button>
+        <a class="btn btn--primary" href="#new-modal">+ New checklist</a>
       </div>
 
       <section class="section" aria-labelledby="created-heading">
@@ -75,7 +78,11 @@
             <div class="list-card__icon" aria-hidden="true">📋</div>
             <div class="list-card__body">
               <p class="list-card__title">Team offsite prep</p>
-              <p class="list-card__meta">Owner: Priya S. · 6 collaborators · 19 items</p>
+              <p class="list-card__meta">
+                <span class="list-card__owner"><span class="avatar avatar--initials avatar--color-3" aria-hidden="true">PS</span>Priya S.</span>
+                · 6 collaborators · 12 / 19 done
+              </p>
+              <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: 63%"></span></div>
             </div>
             <div class="list-card__avatars" aria-hidden="true">
               <span class="avatar avatar--initials avatar--sm avatar--color-3">PS</span>
@@ -89,7 +96,11 @@
             <div class="list-card__icon" aria-hidden="true">📋</div>
             <div class="list-card__body">
               <p class="list-card__title">Wedding errands</p>
-              <p class="list-card__meta">Owner: Neha M. · 5 collaborators · 24 items</p>
+              <p class="list-card__meta">
+                <span class="list-card__owner"><span class="avatar avatar--initials avatar--color-4" aria-hidden="true">NM</span>Neha M.</span>
+                · 5 collaborators · 6 / 24 done
+              </p>
+              <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: 25%"></span></div>
             </div>
             <div class="list-card__avatars" aria-hidden="true">
               <span class="avatar avatar--initials avatar--sm avatar--color-4">NM</span>
@@ -98,7 +109,71 @@
           </a>
         </div>
       </section>
+
+      <section class="section" aria-label="First-time user preview">
+        <span class="mock-label">New user — no own lists, no invites (replaces both sections)</span>
+        <div class="empty-state">
+          <div class="empty-state__icon" aria-hidden="true">✓</div>
+          <h2>Create your first checklist</h2>
+          <p>Add tasks, invite people by their Gmail address, and tick things off together in real time.</p>
+          <a class="btn btn--primary" href="#new-modal">+ New checklist</a>
+          <p class="empty-state__hint">Expecting a shared list? Ask the owner to invite <strong>rahul@gmail.com</strong> — it’ll appear here automatically.</p>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Loading state preview">
+        <span class="mock-label">Loading state (skeleton) — shown while lists load</span>
+        <div class="list-cards" aria-busy="true">
+          <div class="list-card list-card--skeleton">
+            <span class="skeleton skeleton--icon"></span>
+            <div class="list-card__body">
+              <span class="skeleton skeleton--title"></span>
+              <span class="skeleton skeleton--meta"></span>
+            </div>
+          </div>
+          <div class="list-card list-card--skeleton">
+            <span class="skeleton skeleton--icon"></span>
+            <div class="list-card__body">
+              <span class="skeleton skeleton--title" style="width: 35%"></span>
+              <span class="skeleton skeleton--meta" style="width: 22%"></span>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
+
+  <div class="modal-backdrop" id="new-modal" role="dialog" aria-labelledby="new-title" aria-modal="true">
+    <div class="modal modal--wide">
+      <a class="icon-btn modal__close" href="#" aria-label="Close">✕</a>
+      <div class="modal__header">
+        <h2 id="new-title">New checklist</h2>
+        <p>You can invite people after creating it.</p>
+      </div>
+      <div class="modal__body">
+        <div class="field">
+          <label for="new-list-title">Title</label>
+          <input id="new-list-title" type="text" placeholder="e.g. Goa trip — March" value="Weekend groceries" />
+        </div>
+        <div class="field">
+          <label for="new-list-tasks">First tasks (optional) <span class="field__count">2 tasks</span></label>
+          <textarea id="new-list-tasks" placeholder="One task per line">Milk
+Eggs</textarea>
+          <p class="field__hint">Each line becomes a task in your column.</p>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <a class="btn btn--ghost" href="#">Cancel</a>
+        <button type="button" class="btn btn--primary">Create checklist</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // mockup only: close popup on backdrop click or Escape
+    const backdrop = document.getElementById("new-modal");
+    backdrop.addEventListener("click", (e) => { if (e.target === backdrop) location.hash = ""; });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") location.hash = ""; });
+  </script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+/* ——— First-run dashboard: no lists, no invites ——— */
+
+.empty-state {
+  max-width: 440px;
+  margin: 1rem auto;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  animation: fade-up 0.35s var(--ease-out) both;
+}
+
+.empty-state__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-md);
+}
+
+.empty-state h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+.empty-state p { margin: 0 0 1.25rem; color: var(--color-text-muted); font-size: 0.9375rem; }
+
+.empty-state .empty-state__hint {
+  margin: 1.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-subtle);
+}

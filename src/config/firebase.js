@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { firebaseConfig } from "../firebase-config.js";
+import { firebaseConfig } from "../../firebase-config.js";
 
 export const configMissing = !firebaseConfig?.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY";
 

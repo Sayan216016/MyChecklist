@@ -1,4 +1,4 @@
-﻿# Internal documentation
+﻿# Maintainer documentation
 
 Not deployed to GitHub Pages — kept in the repo for maintainers only.
 

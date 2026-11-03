@@ -1,0 +1,44 @@
+/* ——— Avatar ——— */
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.avatar--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+}
+
+.avatar--lg {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar--initials {
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.avatar--initials.avatar--color-2 { background: #7c3aed; }
+.avatar--initials.avatar--color-3 { background: #db2777; }
+.avatar--initials.avatar--color-4 { background: #059669; }
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+

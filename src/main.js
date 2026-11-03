@@ -26,7 +26,12 @@ import { renderChecklist } from "./views/checklist.js";
 import { renderHeader } from "./components/layout.js";
 import { checklistSkeleton } from "./components/skeletons.js";
 import { closeModal } from "./components/modal.js";
-import { openNewChecklistPopup, openAddTasksPopup, openInvitePopup } from "./components/popups.js";
+import {
+  openNewChecklistPopup,
+  openAddTasksPopup,
+  openInvitePopup,
+  openDeleteChecklistPopup,
+} from "./components/popups.js";
 import { showToast } from "./utils/helpers.js";
 import { initThemeToggle } from "./utils/theme.js";
 
@@ -305,15 +310,12 @@ function mountList(user, listId) {
         showToast("Invite sent");
       });
     });
-    appEl.querySelector("[data-action=delete-list]")?.addEventListener("click", async () => {
-      if (!confirm("Delete this entire checklist? This cannot be undone.")) return;
-      try {
+    appEl.querySelector("[data-action=delete-list]")?.addEventListener("click", () => {
+      openDeleteChecklistPopup(async () => {
         await deleteChecklist(listId);
         showToast("List deleted");
         navigate("/");
-      } catch (e) {
-        showToast(e.message, true);
-      }
+      });
     });
   };
 

@@ -111,3 +111,45 @@ export function openInvitePopup(onInvite) {
   });
   bindSubmit(el, () => onInvite(el.querySelector("#invite-email").value));
 }
+
+export function openDeleteChecklistPopup(onDelete) {
+  const el = openModal({
+    title: "Delete checklist",
+    subtitle: "This permanently removes the list and all tasks for everyone. This cannot be undone.",
+    body: `
+      <div class="field">
+        <label for="delete-confirm">Type <strong>DELETE</strong> to confirm</label>
+        <input id="delete-confirm" type="text" placeholder="DELETE" autocomplete="off" spellcheck="false" />
+      </div>`,
+    footer: `
+      <button type="button" class="btn btn--ghost" data-close>Cancel</button>
+      <button type="button" class="btn btn--danger btn--danger-fill" data-submit disabled>Confirm</button>`,
+  });
+  const input = el.querySelector("#delete-confirm");
+  const btn = el.querySelector("[data-submit]");
+  let busy = false;
+  const syncBtn = () => {
+    btn.disabled = busy || input.value !== "DELETE";
+  };
+  input.addEventListener("input", syncBtn);
+  const submit = async () => {
+    if (busy || input.value !== "DELETE") return;
+    busy = true;
+    syncBtn();
+    try {
+      await onDelete();
+      closeModal();
+    } catch (e) {
+      showToast(e.message, true);
+      busy = false;
+      syncBtn();
+    }
+  };
+  btn.addEventListener("click", submit);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submit();
+    }
+  });
+}

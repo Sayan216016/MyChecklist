@@ -30,3 +30,5 @@
 
 [data-theme="dark"] .btn--danger { border-color: rgba(248, 113, 113, 0.35); }
 [data-theme="dark"] .btn--danger:hover { background: rgba(248, 113, 113, 0.2); }
+[data-theme="dark"] .btn--danger-fill,
+[data-theme="dark"] .btn--danger-fill:hover { background: var(--color-danger); color: #fff; }

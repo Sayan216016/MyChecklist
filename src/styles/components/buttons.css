@@ -68,6 +68,17 @@
   background: color-mix(in srgb, var(--color-danger) 18%, transparent);
 }
 
+.btn--danger-fill {
+  background: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+}
+
+.btn--danger-fill:hover {
+  background: color-mix(in srgb, var(--color-danger) 88%, #000);
+  color: #fff;
+}
+
 .btn--google {
   background: var(--color-surface);
   border-color: var(--color-border-strong);

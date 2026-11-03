@@ -8,7 +8,7 @@ Last updated: 3 November 2026
 
 ## One-line resume
 
-v1.1 redesign is built and live on GitHub Pages (Firebase project `mychecklist-194ac`). Invites work with a second Google account. **Latest header + "← Dashboard" changes are local only — push `master` to ship them.** Open item: confirm task edit works for a collaborator (see "Open issues").
+v1.1 redesign is built and live on GitHub Pages (Firebase project `mychecklist-194ac`). Invites work with a second Google account. Open item: confirm task edit works for a collaborator (see "Open issues").
 
 ---
 
@@ -35,10 +35,9 @@ The `mockup/` pages were the spec; everything from `mockup/css/polish.css` is me
 ## Open issues / next steps
 
 1. **Task edit by a collaborator** reported "insufficient permissions" once. The edit rule in `firestore.rules` is deployed (CLI said "already up to date"), so retest; if it still fails, capture the console error and check the items `update` rule.
-2. Push the latest local changes (header pill, "← Dashboard").
-3. Nice-to-have, not built: member avatars on home cards (mockup shows them; needs member data per list); Undo for more than the last of several quick deletes; >500-line paste in Add tasks (one batch limit).
-4. Ignore or remove unrelated `.sf/` Salesforce metadata.
-
+2. Nice-to-have, not built: member avatars on home cards (mockup shows them; needs member data per list); Undo for more than the last of several quick deletes; >500-line paste in Add tasks (one batch limit).
+3. Ignore or remove unrelated `.sf/` Salesforce metadata.
+4. **Firestore reads** run several times higher than writes. That's expected: live listeners, plus 2 count queries per home card. Possible savings if needed: drop the redundant `getChecklistOnce` in `mountList` (the list listener already covers it), or store `itemCount`/`doneCount` on the list doc so home needs no count queries (keep `getListSummary` as the fallback for old lists).
 ---
 
 ## Product summary
@@ -54,7 +53,7 @@ The `mockup/` pages were the spec; everything from `mockup/css/polish.css` is me
 
 | Area | Status | Notes |
 |------|--------|--------|
-| v1.1 UI | Live | Latest header/back-link tweak not pushed yet |
+| v1.1 UI | Live | Includes header pill + "← Dashboard" |
 | `firebase-config.js` | Done | Project `mychecklist-194ac` |
 | Firestore database | Done | ID `(default)`, Standard edition, Native mode |
 | Firestore rules | Deployed | Includes task-text edit rule |

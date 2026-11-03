@@ -439,13 +439,13 @@ body {
 }
 
 .check-item__label {
-  background: linear-gradient(currentColor, currentColor) no-repeat 0 55% / 0 1px;
-  transition: background-size 0.25s var(--ease-out), color 0.2s;
+  transition: color 0.2s;
 }
 
 .check-item--done .check-item__label {
-  text-decoration: none;
-  background-size: 100% 1px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: currentColor;
 }
 
 /* ——— Item card (edit / delete visible to creator + list owner only) ——— */

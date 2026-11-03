@@ -145,22 +145,20 @@
 }
 
 .check-item__label {
-  background: linear-gradient(currentColor, currentColor) no-repeat 0 55% / 0 1px;
-  transition: background-size 0.25s var(--ease-out), color 0.2s;
+  transition: color 0.2s;
 }
 
+/* Native strike: gradient line breaks on wrapped text in narrow desktop notes */
 .check-item--done .check-item__label {
-  text-decoration: none;
-  background-size: 100% 1px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: currentColor;
 }
 
 /* #app re-renders on every live update; once settled (set in main.js) only fresh things animate */
 [data-settled] .app-main,
 [data-settled] .list-card,
 [data-settled] .check-item__input:checked:not(.is-fresh) { animation: none; }
-
-.check-item--done .is-fresh + .check-item__label { animation: sweep 0.25s var(--ease-out); }
-@keyframes sweep { from { background-size: 0 1px; } }
 
 /* ——— New row slides in; deleted row fades while Undo is offered ——— */
 

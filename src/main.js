@@ -13,6 +13,7 @@ import {
   subscribeItems,
   addItems,
   updateItemText,
+  updateChecklistTitle,
   deleteItem,
   getListSummary,
   toggleItemComplete,
@@ -158,6 +159,8 @@ function mountList(user, listId) {
   let deletedListTitle = "";
   let editingId = null;
   let editDraft = "";
+  let editingTitle = false;
+  let titleDraft = "";
   let poppedId = null;
   let freshIds = new Set();
   const leavingIds = new Set();
@@ -206,6 +209,18 @@ function mountList(user, listId) {
     }
   };
 
+  const saveTitleEdit = async () => {
+    const text = titleDraft.trim();
+    editingTitle = false;
+    rerender();
+    if (!list || !text || text === list.title) return;
+    try {
+      await updateChecklistTitle(listId, text);
+    } catch (e) {
+      showToast(e.message, true);
+    }
+  };
+
   const rerender = () => {
     if (listDeleted) {
       setApp(renderListGone(user, deletedListTitle));
@@ -237,6 +252,8 @@ function mountList(user, listId) {
       renderChecklist(user, list, members, items, {
         editingId,
         editDraft,
+        editingTitle,
+        titleDraft,
         poppedId,
         leavingIds,
         freshIds,
@@ -247,7 +264,10 @@ function mountList(user, listId) {
     bindListEvents();
 
     // live re-renders replace the edit box; keep focus in the visible one (mobile or desktop)
-    const editInput = [...appEl.querySelectorAll("[data-edit-input]")].find((el) => el.offsetParent);
+    const titleInput = appEl.querySelector("[data-title-input]");
+    const editInput =
+      titleInput ||
+      [...appEl.querySelectorAll("[data-edit-input]")].find((el) => el.offsetParent);
     if (editInput) {
       editInput.focus();
       editInput.setSelectionRange(editInput.value.length, editInput.value.length);
@@ -270,13 +290,32 @@ function mountList(user, listId) {
       });
     });
 
+    appEl.querySelector("[data-edit-title]")?.addEventListener("click", () => {
+      editingTitle = true;
+      editingId = null;
+      titleDraft = list.title;
+      rerender();
+    });
+
     appEl.querySelectorAll("[data-edit-item]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const item = items.find((i) => i.id === btn.getAttribute("data-edit-item"));
         if (!item) return;
+        editingTitle = false;
         editingId = item.id;
         editDraft = item.text;
         rerender();
+      });
+    });
+
+    appEl.querySelectorAll("[data-title-input]").forEach((input) => {
+      input.addEventListener("input", () => (titleDraft = input.value));
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") saveTitleEdit();
+        if (e.key === "Escape") {
+          editingTitle = false;
+          rerender();
+        }
       });
     });
 

@@ -451,6 +451,43 @@ img {
   margin: 0;
   font-size: 1.375rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.checklist-toolbar__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.25rem;
+}
+
+.checklist-toolbar__title-row h1 {
+  min-width: 0;
+}
+
+.checklist-toolbar__title-edit {
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+
+.checklist-toolbar__title-edit:hover {
+  color: var(--color-primary);
+}
+
+.checklist-toolbar__title-input {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  font: inherit;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--color-primary-soft);
 }
 
 .checklist-toolbar__meta {

@@ -114,14 +114,24 @@ export function renderChecklist(
   list,
   members,
   items,
-  { editingId, editDraft, poppedId, leavingIds, freshIds },
+  { editingId, editDraft, editingTitle, titleDraft, poppedId, leavingIds, freshIds },
 ) {
   const isOwner = list.createdBy === user.uid;
   const view = { uid: user.uid, isOwner, editingId, editDraft, poppedId, leavingIds };
   const done = items.filter((i) => i.completed).length;
   const pct = items.length ? Math.round((done / items.length) * 100) : 0;
   const ownerMeta = isOwner ? "You’re the owner" : "Collaborator";
-  const title = escapeHtml(list.title);
+
+  const titleBlock = editingTitle
+    ? `
+        <div class="checklist-toolbar__title-row">
+          <input class="checklist-toolbar__title-input" type="text" value="${escapeHtml(titleDraft)}" maxlength="200" aria-label="Checklist name" data-title-input />
+        </div>`
+    : `
+        <div class="checklist-toolbar__title-row">
+          <h1>${escapeHtml(list.title)}</h1>
+          ${isOwner ? `<button type="button" class="icon-btn checklist-toolbar__title-edit" aria-label="Edit checklist name" title="Edit name" data-edit-title>✎</button>` : ""}
+        </div>`;
 
   const memberPills = members
     .map((m) => {
@@ -153,7 +163,7 @@ export function renderChecklist(
         </a>
         <div class="checklist-toolbar">
           <div>
-            <h1>${title}</h1>
+            ${titleBlock}
             <p class="checklist-toolbar__meta">${ownerMeta} · ${members.length} collaborator${members.length === 1 ? "" : "s"} · ${done} / ${items.length} done</p>
             <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: ${pct}%"></span></div>
           </div>

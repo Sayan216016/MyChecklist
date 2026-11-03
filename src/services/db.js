@@ -151,6 +151,16 @@ export async function toggleItemComplete(listId, item, user, completed) {
   });
 }
 
+export async function updateChecklistTitle(listId, title) {
+  const trimmed = title.trim();
+  if (!trimmed) throw new Error("Title can't be empty");
+  if (trimmed.length > 200) throw new Error("Title is too long");
+  await updateDoc(doc(db, "checklists", listId), {
+    title: trimmed,
+    updatedAt: serverTimestamp(),
+  });
+}
+
 /** Allowed by rules only for the task's creator or the list owner. */
 export async function updateItemText(listId, itemId, text) {
   const trimmed = text.trim();

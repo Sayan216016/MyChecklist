@@ -36,7 +36,10 @@
     <main class="app-main app-main--wide">
       <div class="checklist-toolbar">
         <div>
-          <h1>Bikin - bou</h1>
+          <div class="checklist-toolbar__title-row">
+            <h1>Bikin - bou</h1>
+            <a class="icon-btn checklist-toolbar__title-edit" href="#title-edit" aria-label="Edit checklist name" title="Edit name">✎</a>
+          </div>
           <p class="checklist-toolbar__meta">You’re the owner · 2 collaborators · 15 / 28 done</p>
           <div class="progress" aria-hidden="true"><span class="progress__bar" style="width: 54%"></span></div>
         </div>
@@ -58,7 +61,14 @@
         </span>
       </div>
 
-      <p class="mock-label"><strong>v1.2:</strong> one shared list — anyone adds, anyone ticks. Sticky notes wrap on desktop (less vertical scroll). Stripe + “Added by” = who typed it, not who owns the work. ✎/🗑 rules unchanged.</p>
+      <p class="mock-label"><strong>v1.2:</strong> one shared list — anyone adds, anyone ticks. Sticky notes wrap on desktop. Stripe + “Added by” = who typed it. List owner: ✎ on the title (Enter save · Esc cancel). Task ✎/🗑 rules unchanged.</p>
+
+      <section id="title-edit" style="margin-bottom: 1rem;" aria-label="Title editing preview">
+        <span class="mock-label">Title editing (owner only — collaborators see no ✎)</span>
+        <div class="checklist-toolbar__title-row">
+          <input class="checklist-toolbar__title-input" type="text" value="Bikin - bou" aria-label="Checklist name" />
+        </div>
+      </section>
 
       <div class="checklist-actions mobile-only">
         <a class="btn btn--secondary btn--sm col-header__add-btn" href="#add-modal">+ Add tasks</a>
